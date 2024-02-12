@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PlantBuddy</string>
+    <string name="take_photo_or_gallery">Take a photo or choose one from gallery</string>
 </resources>
