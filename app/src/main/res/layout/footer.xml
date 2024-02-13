@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
     android:gravity="center"
-    android:layout_gravity="bottom">
+    android:orientation="horizontal">
 
     <Button
         android:id="@+id/button"
         android:layout_width="0dp"
         android:layout_height="60dp"
+        android:layout_marginEnd="2dp"
         android:layout_weight="1" />
 
     <Button
         android:id="@+id/button4"
         android:layout_width="0dp"
         android:layout_height="60dp"
+        android:layout_marginEnd="2dp"
         android:layout_weight="1" />
 
     <Button
         android:id="@+id/button5"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_weight="1.5" />
+        android:layout_marginEnd="2dp"
+        android:layout_weight="1.5"
+        android:onClick="onHome" />
 
     <Button
         android:id="@+id/button6"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_weight="1" />
+        android:layout_marginEnd="2dp"
+        android:layout_weight="1"
+        android:onClick="onPlantsCollection"/>
 
     <Button
         android:id="@+id/button7"
