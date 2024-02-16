@@ -4,4 +4,6 @@
     <string name="scan">Scan</string>
     <string name="gallery">Gallery</string>
     <string name="plants_collection">Plants Collection</string>
+    <string name="profile">Profile</string>
+    <string name="options">Options</string>
 </resources>
