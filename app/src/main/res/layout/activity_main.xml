@@ -16,11 +16,11 @@
         android:text="@string/take_photo_or_gallery"
         android:textFontWeight="700" />
 
-    <TextureView
-        android:id="@+id/textureView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_centerInParent="true" />
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/photo" />
 
     <Button
         android:id="@+id/bScan"

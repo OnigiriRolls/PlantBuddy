@@ -1,117 +1,98 @@
 package com.szi.plantbuddy;
 
-import android.os.Bundle;
-import android.util.Rational;
-import android.util.Size;
-import android.view.TextureView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.Manifest;
-
-import androidx.annotation.NonNull;
-import androidx.camera.core.AspectRatio;
-import androidx.camera.core.CameraX;
-import androidx.camera.core.ImageCapture;
-import androidx.camera.core.Preview;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import androidx.camera.core.resolutionselector.AspectRatioStrategy;
-import androidx.camera.core.resolutionselector.ResolutionSelector;
-import androidx.camera.core.resolutionselector.ResolutionStrategy;
-import androidx.lifecycle.LifecycleOwner;
-import android.content.ContentValues;
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Rational;
-import android.util.Size;
-import android.view.Surface;
-import android.view.TextureView;
+import android.os.ParcelFileDescriptor;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileDescriptor;
+import java.io.IOException;
 
 public class MainActivity extends BaseActivity {
-    private Button takePhotoButton;
-    private TextureView textureView;
-    private PermissionManager permissionManager;
-    private String[] permissions = {
-            Manifest.permission.CAMERA,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
-    private ImageCapture imageCapture;
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
+    ActivityResultLauncher<Intent> cameraActivityResultLauncher;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        takePhotoButton = findViewById(R.id.bScan);
-        textureView = findViewById(R.id.textureView);
-        permissionManager = PermissionManager.getInstance(this);
+        imageView = findViewById(R.id.imageView1);
+        cameraActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null && data.getData() != null) {
+                            Uri selectedImage = data.getData();
+                            try {
+                                Bitmap photo = getBitmapFromUri(selectedImage);
+                                if (photo != null)
+                                    imageView.setImageBitmap(photo);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+//                        if (data != null && data.getExtras() != null) {
+//                            Bitmap photo = (Bitmap) data.getExtras().get("data");
+//                            if (photo != null)
+//                                imageView.setImageBitmap(photo);
+//                        }
+                    }
+                });
     }
 
     public void takePhoto(View view) {
-        if (!permissionManager.checkPermissions(permissions)) {
-            permissionManager.askPermissions(MainActivity.this, permissions, 100);
+        if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{android.Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
         } else {
-            openCamera();
+            startCamera();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if(requestCode == 100) {
-            permissionManager.handlePermissionResult(MainActivity.this, 100, permissions, grantResults);
-
-            openCamera();
+        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startCamera();
+            } else {
+                Toast.makeText(this, "Camera permission is denied", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
-    private void openCamera() {
-        CameraX.unbindAll();
-
-        Rational rational = new Rational(textureView.getWidth(), textureView.getHeight());
-        Size screenSize = new Size(textureView.getWidth(), textureView.getHeight());
-        AspectRatio aspectRatio = new AspectRatio(rational);
-
-        ResolutionSelector resolutionSelector = new ResolutionSelector.Builder()
-                .setResolutionStrategy(new ResolutionStrategy(screenSize, ResolutionStrategy.FALLBACK_RULE_NONE))
-                .build();
-
-        Preview preview = new Preview.Builder()
-                .setResolutionSelector(resolutionSelector)
-                .build();
-
-//        preview.setOnPreviewOutputUpdateListener(
-//                new _Preview.OnPreviewOutputUpdateListenerQ._t
-//
-//        @Override
-//        public void onUpdated(Preview.PreviewOutput output) (
-//                ViewGroup parent = (ViewGroup) textureView.getParent();
-//        parent.removeVíew(textureView);
-//        parent.addView(textureView, index0);
-//        textureView.setSurfaceTexture(output.getSurfaceTexture());
-//
-//        ImageCaptureConfig imageCaptureConfig =
-//                new ImageCaptureConfig.Builder().setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
-//        setTargetRotation(getWindowManager().getDefaultDisplay().getRotation()).bu1ld();
-//        imgCap = new ImageCapture(imageCaptureConfig);
-////bind to lifecycle:
-//        Camerax.bindToLifecycle((LifecycleOwner) this, preview, imgCap);
-//        private void updateTransform() t
-//        Matrix mx = new Matrix();
-//        float W textureView. .getHeasuredWidth();
+    private void startCamera() {
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraActivityResultLauncher.launch(cameraIntent);
     }
 
+    private Bitmap getBitmapFromUri(Uri uri) throws IOException {
+        ParcelFileDescriptor parcelFileDescriptor =
+                getContentResolver().openFileDescriptor(uri, "r");
+        FileDescriptor fileDescriptor;
+        if (parcelFileDescriptor != null) {
+            fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+            Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+            parcelFileDescriptor.close();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, 50, out);
+            return BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
+        }
+        return null;
+    }
 }
