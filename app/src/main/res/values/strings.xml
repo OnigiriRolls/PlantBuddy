@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PlantBuddy</string>
     <string name="take_photo_or_gallery">Take a photo or choose one from gallery</string>
-    <string name="scan">Scan</string>
+    <string name="takePhoto">Take photo</string>
     <string name="gallery">Gallery</string>
     <string name="plants_collection">Plants Collection</string>
     <string name="profile">Profile</string>
