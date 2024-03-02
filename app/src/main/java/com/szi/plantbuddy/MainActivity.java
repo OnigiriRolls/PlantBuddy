@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -18,23 +17,22 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 
-import com.szi.plantbuddy.mlmodels.FlowerModel;
+import com.szi.plantbuddy.exception.FileException;
+import com.szi.plantbuddy.exception.ModelException;
+import com.szi.plantbuddy.mlmodel.FlowerModel;
+import com.szi.plantbuddy.util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends BaseActivity {
     private static final int MY_CAMERA_REQUEST_CODE = 100;
-    private static final String FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS";
     private static final FlowerModel FLOWER_MODEL = new FlowerModel();
-    ActivityResultLauncher<Intent> cameraActivityResultLauncher;
+    private static final FileUtil FILE_UTILS = new FileUtil();
+    private ActivityResultLauncher<Intent> cameraActivityResultLauncher;
     private ImageView imageView;
-    private String currentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +45,9 @@ public class MainActivity extends BaseActivity {
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         try {
-                            Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(currentPhotoPath));
+                            Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(FILE_UTILS.getCurrentPhotoPath()));
                             imageView.setImageBitmap(imageBitmap);
-                            startActivityWithResults(imageBitmap);
+                            runModelAndShowResults(imageBitmap);
                         } catch (IOException e) {
                             Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
                         }
@@ -57,21 +55,20 @@ public class MainActivity extends BaseActivity {
                 });
     }
 
-    private void startActivityWithResults(Bitmap imageBitmap) {
-        List<String> results = getResultsFromModel(imageBitmap);
-
-        if (results != null) {
-            Intent intent = new Intent(this, MlResult.class);
-            intent.putStringArrayListExtra("results", new ArrayList<>(results));
-            startActivity(intent);
-        } else {
+    private void runModelAndShowResults(Bitmap imageBitmap) {
+        List<String> results = null;
+        try {
+            results = FLOWER_MODEL.runModel(this, imageBitmap);
+            startActivityWithResults(results);
+        } catch (ModelException e) {
             Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
         }
     }
 
-    private List<String> getResultsFromModel(Bitmap imageBitmap) {
-        FLOWER_MODEL.initModel(this);
-        return FLOWER_MODEL.analyze(this, imageBitmap);
+    private void startActivityWithResults(List<String> results) {
+        Intent intent = new Intent(this, MlResult.class);
+        intent.putStringArrayListExtra("results", new ArrayList<>(results));
+        startActivity(intent);
     }
 
     public void onClick(View view) {
@@ -99,8 +96,8 @@ public class MainActivity extends BaseActivity {
 
         File photoFile = null;
         try {
-            photoFile = createImageFile();
-        } catch (IOException ex) {
+            photoFile = FILE_UTILS.createImageFile(this);
+        } catch (IOException | FileException ex) {
             Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
             Log.i("debug", "IOException");
         }
@@ -110,21 +107,6 @@ public class MainActivity extends BaseActivity {
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
             cameraActivityResultLauncher.launch(cameraIntent);
         }
-    }
-
-    private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat(FILENAME_FORMAT, Locale.getDefault()).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,
-                ".jpg",
-                storageDir
-        );
-
-        currentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
     }
 
 }
