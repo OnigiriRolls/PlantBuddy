@@ -11,7 +11,7 @@
     </style>
 
     <style name="TextAppearance.Small" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="fontFamily">@font/poppins_family</item>
     </style>
 </resources>

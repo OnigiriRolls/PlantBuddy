@@ -1,11 +1,15 @@
 <resources>
     <string name="app_name">PlantBuddy</string>
     <string name="take_photo_or_gallery">Take a photo or choose one from gallery</string>
+    <string name="scan">Scan</string>
     <string name="takePhoto">Take photo</string>
     <string name="gallery">Gallery</string>
     <string name="plants_collection">Plants Collection</string>
     <string name="profile">Profile</string>
     <string name="options">Options</string>
     <string name="dark_theme">Dark Theme</string>
+    <string name="message_error">There was an error!</string>
+    <string name="message_camera_permission_denied">"Camera permission is denied"</string>
     <string name="photo">Photo</string>
+    <string name="results">Results</string>
 </resources>

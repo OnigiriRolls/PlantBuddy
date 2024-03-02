@@ -18,16 +18,20 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 
+import com.szi.plantbuddy.mlmodels.FlowerModel;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends BaseActivity {
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private static final String FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS";
-
+    private static final FlowerModel FLOWER_MODEL = new FlowerModel();
     ActivityResultLauncher<Intent> cameraActivityResultLauncher;
     private ImageView imageView;
     private String currentPhotoPath;
@@ -45,11 +49,29 @@ public class MainActivity extends BaseActivity {
                         try {
                             Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(currentPhotoPath));
                             imageView.setImageBitmap(imageBitmap);
+                            startActivityWithResults(imageBitmap);
                         } catch (IOException e) {
-                            throw new RuntimeException(e);
+                            Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
                         }
                     }
                 });
+    }
+
+    private void startActivityWithResults(Bitmap imageBitmap) {
+        List<String> results = getResultsFromModel(imageBitmap);
+
+        if (results != null) {
+            Intent intent = new Intent(this, MlResult.class);
+            intent.putStringArrayListExtra("results", new ArrayList<>(results));
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private List<String> getResultsFromModel(Bitmap imageBitmap) {
+        FLOWER_MODEL.initModel(this);
+        return FLOWER_MODEL.analyze(this, imageBitmap);
     }
 
     public void onClick(View view) {
@@ -67,7 +89,7 @@ public class MainActivity extends BaseActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startCameraSimple();
             } else {
-                Toast.makeText(this, "Camera permission is denied", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.message_camera_permission_denied, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -79,7 +101,7 @@ public class MainActivity extends BaseActivity {
         try {
             photoFile = createImageFile();
         } catch (IOException ex) {
-            Toast.makeText(this, "There was an error!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
             Log.i("debug", "IOException");
         }
 
@@ -104,4 +126,5 @@ public class MainActivity extends BaseActivity {
         currentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
     }
+
 }
