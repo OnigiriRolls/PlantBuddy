@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -33,6 +35,7 @@ public class MainActivity extends BaseActivity {
     private static final FileUtil FILE_UTILS = new FileUtil();
     private ActivityResultLauncher<Intent> cameraActivityResultLauncher;
     private ImageView imageView;
+    private TextView titleText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +43,15 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         imageView = findViewById(R.id.imageView1);
+        titleText = findViewById(R.id.tTitle);
+
         cameraActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         try {
                             Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(FILE_UTILS.getCurrentPhotoPath()));
+                            titleText.setVisibility(View.INVISIBLE);
                             imageView.setImageBitmap(imageBitmap);
                             runModelAndShowResults(imageBitmap);
                         } catch (IOException e) {

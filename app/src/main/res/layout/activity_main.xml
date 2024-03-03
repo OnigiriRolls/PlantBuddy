@@ -10,9 +10,9 @@
         android:id="@+id/tTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/bScan"
+        android:layout_above="@id/layoutButtons"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="150dp"
+        android:layout_marginBottom="50dp"
         android:text="@string/take_photo_or_gallery"
         android:textFontWeight="700" />
 
@@ -20,22 +20,56 @@
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/layoutButtons"
+        android:layout_marginBottom="50dp"
         android:contentDescription="@string/photo" />
 
-    <Button
-        android:id="@+id/bScan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:onClick="onClick"
-        android:text="@string/takePhoto" />
+    <LinearLayout
+        android:id="@+id/layoutButtons"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_above="@id/footer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/bGallery"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/bScan"
-        android:text="@string/gallery" />
+        <Button
+            android:id="@+id/bScan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:text="@string/takePhoto"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/bGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/gallery"
+            android:layout_marginBottom="20dp"/>
+
+        <Button
+            android:id="@+id/bFlowers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/flowers"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/bFruitsVeggies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fruits_vegetables"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/bDiseases"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/diseases" />
+    </LinearLayout>
 
     <include
         android:id="@+id/footer"

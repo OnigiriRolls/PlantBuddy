@@ -12,4 +12,7 @@
     <string name="message_camera_permission_denied">"Camera permission is denied"</string>
     <string name="photo">Photo</string>
     <string name="results">Results</string>
+    <string name="fruits_vegetables"><![CDATA[Fruits & Vegetables]]></string>
+    <string name="diseases">Diseases</string>
+    <string name="flowers">Flowers</string>
 </resources>
