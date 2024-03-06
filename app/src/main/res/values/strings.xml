@@ -15,4 +15,6 @@
     <string name="fruits_vegetables"><![CDATA[Fruits & Vegetables]]></string>
     <string name="diseases">Diseases</string>
     <string name="flowers">Flowers</string>
+    <string name="default_theme">System Default</string>
+    <string name="theme">theme</string>
 </resources>

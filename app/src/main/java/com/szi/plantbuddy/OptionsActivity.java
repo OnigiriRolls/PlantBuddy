@@ -1,8 +1,5 @@
 package com.szi.plantbuddy;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +7,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.szi.plantbuddy.util.ThemeManager;
 
 public class OptionsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -56,17 +57,8 @@ public class OptionsActivity extends AppCompatActivity implements AdapterView.On
         String themeOption = parent.getItemAtPosition(position).toString();
         Log.d("debug", themeOption);
 
-        switch (themeOption){
-            case "Light":
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                break;
-            case "Dark":
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                break;
-            case "System Default":
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                break;
-        }
+        ThemeManager.getInstance().setAppTheme(themeOption);
+        ThemeManager.getInstance().saveThemeInSharedPreferences(this, themeOption);
     }
 
     @Override

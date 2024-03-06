@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -23,6 +22,7 @@ import com.szi.plantbuddy.exception.FileException;
 import com.szi.plantbuddy.exception.ModelException;
 import com.szi.plantbuddy.mlmodel.FlowerModel;
 import com.szi.plantbuddy.util.FileUtil;
+import com.szi.plantbuddy.util.ThemeManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +44,8 @@ public class MainActivity extends BaseActivity {
 
         imageView = findViewById(R.id.imageView1);
         titleText = findViewById(R.id.tTitle);
+
+        ThemeManager.getInstance().init(this);
 
         cameraActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
