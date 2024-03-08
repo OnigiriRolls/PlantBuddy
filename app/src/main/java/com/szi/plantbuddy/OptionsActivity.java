@@ -1,8 +1,6 @@
 package com.szi.plantbuddy;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,57 +10,53 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.szi.plantbuddy.util.ThemeManager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class OptionsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    private final List<String> themes = new ArrayList<>(Arrays.asList("Light", "Dark"));
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_options);
 
-        Spinner spinner = findViewById(R.id.theme_spinner);
-        spinner.setOnItemSelectedListener(this);
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.themes_array,
-                android.R.layout.simple_spinner_item
-        );
-
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, themes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
 
-        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        switch (currentNightMode) {
-            case Configuration.UI_MODE_NIGHT_NO:
-                // Night mode is not active, we're using the light theme
-                Log.d("debug", "Night mode is not active, we're using light theme");
-                spinner.setSelection(0);
-                break;
-            case Configuration.UI_MODE_NIGHT_YES:
-                // Night mode is active, we're using dark theme
-                Log.d("debug", "Night mode is active, we're using dark theme");
-                spinner.setSelection(1);
-                break;
-            case Configuration.UI_MODE_NIGHT_UNDEFINED:
-                // Night mode state is undefined, could be following the system
-                Log.d("debug", "Night mode state is undefined, could be following the system");
-                spinner.setSelection(2);
-                break;
+        spinner = findViewById(R.id.theme_spinner);
+        spinner.setAdapter(adapter);
+        String currentTheme = ThemeManager.getAppTheme(this);
+        String selectedItem = (String) spinner.getSelectedItem();
+
+        if (!currentTheme.equals(selectedItem)) {
+            if (currentTheme.equals("Light")) {
+                spinner.setSelection(adapter.getPosition("Light"));
+            }
+            spinner.setSelection(adapter.getPosition("Dark"));
         }
 
+        spinner.setOnItemSelectedListener(this);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String themeOption = parent.getItemAtPosition(position).toString();
-        Log.d("debug", themeOption);
+        spinner.setOnItemSelectedListener(null);
 
-        ThemeManager.getInstance().setAppTheme(themeOption);
-        ThemeManager.getInstance().saveThemeInSharedPreferences(this, themeOption);
+        String themeOption = parent.getItemAtPosition(position).toString();
+        String themeApp = ThemeManager.getAppTheme(this);
+
+        if (!themeApp.equals(themeOption)) {
+            ThemeManager.setAppTheme(themeOption);
+            ThemeManager.saveThemeInSharedPreferences(this, themeOption);
+        }
+
+        spinner.setOnItemSelectedListener(this);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 }

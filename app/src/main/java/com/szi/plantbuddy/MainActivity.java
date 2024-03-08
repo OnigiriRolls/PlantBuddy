@@ -39,13 +39,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.getInstance(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         imageView = findViewById(R.id.imageView1);
         titleText = findViewById(R.id.tTitle);
-
-        ThemeManager.getInstance().init(this);
 
         cameraActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
