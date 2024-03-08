@@ -1,6 +1,7 @@
 package com.szi.plantbuddy;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,7 +31,7 @@ public class OptionsActivity extends AppCompatActivity implements AdapterView.On
         spinner.setAdapter(adapter);
         String currentTheme = ThemeManager.getAppTheme(this);
         String selectedItem = (String) spinner.getSelectedItem();
-
+        Log.d("debug", "Selected item: " + selectedItem);
         if (!currentTheme.equals(selectedItem)) {
             if (currentTheme.equals("Light")) {
                 spinner.setSelection(adapter.getPosition("Light"));
@@ -47,7 +48,7 @@ public class OptionsActivity extends AppCompatActivity implements AdapterView.On
 
         String themeOption = parent.getItemAtPosition(position).toString();
         String themeApp = ThemeManager.getAppTheme(this);
-
+        Log.d("debug", "themeApp and option " + themeApp + " : " + themeOption);
         if (!themeApp.equals(themeOption)) {
             ThemeManager.setAppTheme(themeOption);
             ThemeManager.saveThemeInSharedPreferences(this, themeOption);

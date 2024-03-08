@@ -37,16 +37,21 @@ public class ThemeManager {
     }
 
     public static void saveThemeInSharedPreferences(OptionsActivity optionsActivity, String theme) {
-        SharedPreferences sharedPref = optionsActivity.getPreferences(Context.MODE_PRIVATE);
+        String themeKey = optionsActivity.getResources().getString(R.string.theme);
+        SharedPreferences sharedPref = optionsActivity.getSharedPreferences(themeKey, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(optionsActivity.getResources().getString(R.string.theme), theme);
+        editor.putString(themeKey, theme);
         editor.apply();
+        Log.d("debug", "save " + theme);
     }
 
     public static String getThemeFromSharedPreferences(BaseActivity activity) {
-        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+        String themeKey = activity.getResources().getString(R.string.theme);
+        SharedPreferences sharedPref = activity.getSharedPreferences(themeKey, Context.MODE_PRIVATE);
         String defaultTheme = activity.getResources().getString(R.string.default_theme);
-        return sharedPref.getString(activity.getResources().getString(R.string.theme), defaultTheme);
+        String theme = sharedPref.getString(themeKey, defaultTheme);
+        Log.d("debug", "get Theme from shared " + theme);
+        return theme;
     }
 
     public static void setAppTheme(String theme) {
@@ -55,13 +60,16 @@ public class ThemeManager {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
+        Log.d("debug", "setAppTheme " + theme);
     }
 
     public static String getAppTheme(AppCompatActivity activity) {
         int currentNightMode = activity.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         if (currentNightMode == Configuration.UI_MODE_NIGHT_NO) {
+            Log.d("debug", "getAppTheme Light" + currentNightMode);
             return "Light";
         }
+        Log.d("debug", "getAppTheme Dark" + currentNightMode);
         return "Dark";
     }
 
