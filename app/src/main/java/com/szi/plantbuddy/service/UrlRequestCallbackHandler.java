@@ -11,9 +11,17 @@ import org.chromium.net.UrlResponseInfo;
 
 import java.nio.ByteBuffer;
 
+import io.reactivex.rxjava3.core.ObservableEmitter;
+
 public class UrlRequestCallbackHandler extends UrlRequest.Callback {
-    private static final String TAG = "debug";
     private static final boolean shouldFollow = false;
+    private static final String TAG = "debug";
+    private final ObservableEmitter<PlantResponse> emitter;
+
+    public UrlRequestCallbackHandler(ObservableEmitter<PlantResponse> emitter) {
+        this.emitter = emitter;
+    }
+
 
     @Override
     public void onRedirectReceived(UrlRequest request, UrlResponseInfo info, String newLocationUrl) {
@@ -48,6 +56,9 @@ public class UrlRequestCallbackHandler extends UrlRequest.Callback {
 
         Gson gson = new Gson();
         PlantResponse response = gson.fromJson(jsonString, PlantResponse.class);
+
+        emitter.onNext(response);
+        emitter.onComplete();
     }
 
     @Override

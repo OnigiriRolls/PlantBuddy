@@ -3,6 +3,7 @@ package com.szi.plantbuddy.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Plant {
     private int id;
@@ -80,5 +81,18 @@ public class Plant {
 
     public void setImage(PlantImage image) {
         this.image = image;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Plant plant = (Plant) o;
+        return id == plant.id && Objects.equals(commonName, plant.commonName) && Objects.equals(scientificName, plant.scientificName) && Objects.equals(otherName, plant.otherName) && Objects.equals(cycle, plant.cycle) && Objects.equals(watering, plant.watering) && Objects.equals(sunlight, plant.sunlight) && Objects.equals(image, plant.image);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, commonName, scientificName, otherName, cycle, watering, sunlight, image);
     }
 }

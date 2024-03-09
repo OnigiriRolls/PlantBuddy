@@ -73,4 +73,7 @@ public class PlantResponse {
         this.total = total;
     }
 
+    public int getNextPageNumber() {
+        return currentPage + 1;
+    }
 }
