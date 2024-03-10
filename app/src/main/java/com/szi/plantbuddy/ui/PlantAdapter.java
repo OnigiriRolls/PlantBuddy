@@ -18,7 +18,7 @@ public class PlantAdapter extends PagingDataAdapter<Plant, PlantViewHolder> {
     @NonNull
     @Override
     public PlantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new PlantViewHolder(parent);
+        return PlantViewHolder.create(parent);
     }
 
     @Override

@@ -18,7 +18,7 @@ import kotlinx.coroutines.CoroutineScope;
 public class PlantViewModel extends AndroidViewModel {
 
     public PlantViewModel(Application application) {
-        super();
+        super(application);
     }
 
     public Flowable<PagingData<Plant>> getFlowable(AppCompatActivity activity) {

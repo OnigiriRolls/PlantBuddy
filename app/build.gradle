@@ -53,5 +53,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation "androidx.paging:paging-runtime:$paging_version"
     implementation "androidx.paging:paging-rxjava3:$paging_version"
-    implementation 'com.uber.autodispose:autodispose-androidx-lifecycle'
+    implementation 'com.uber.autodispose2:autodispose:2.2.1'
+    implementation 'com.uber.autodispose2:autodispose-lifecycle:2.2.1'
+    implementation 'com.uber.autodispose2:autodispose-android:2.2.1'
+    implementation 'com.uber.autodispose2:autodispose-androidx-lifecycle:2.2.1'
 }
