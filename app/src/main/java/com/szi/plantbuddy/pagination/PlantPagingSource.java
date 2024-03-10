@@ -27,7 +27,6 @@ public class PlantPagingSource extends RxPagingSource<Integer, Plant> {
     @Override
     public Single<LoadResult<Integer, Plant>> loadSingle(
             @NotNull LoadParams<Integer> params) {
-        // Start refresh at page 1 if undefined.
         Integer nextPageNumber = params.getKey();
         if (nextPageNumber == null) {
             nextPageNumber = 1;
@@ -54,13 +53,6 @@ public class PlantPagingSource extends RxPagingSource<Integer, Plant> {
     @Nullable
     @Override
     public Integer getRefreshKey(@NotNull PagingState<Integer, Plant> state) {
-        // Try to find the page key of the closest page to anchorPosition from
-        // either the prevKey or the nextKey; you need to handle nullability
-        // here.
-        //  * prevKey == null -> anchorPage is the first page.
-        //  * nextKey == null -> anchorPage is the last page.
-        //  * both prevKey and nextKey are null -> anchorPage is the
-        //    initial page, so return null.
         Integer anchorPosition = state.getAnchorPosition();
         if (anchorPosition == null) {
             return null;

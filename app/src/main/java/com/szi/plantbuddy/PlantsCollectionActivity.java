@@ -21,17 +21,13 @@ public class PlantsCollectionActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plants_collection);
 
-        PlantViewModel viewModel = new ViewModelProvider(this)
-                .get(PlantViewModel.class);
+        PlantViewModel viewModel = new ViewModelProvider(this).get(PlantViewModel.class);
 
         PlantAdapter pagingAdapter = new PlantAdapter(new PlantComparator());
-        RecyclerView recyclerView = findViewById(
-                R.id.vPlants);
+        RecyclerView recyclerView = findViewById(R.id.vPlants);
         recyclerView.setAdapter(pagingAdapter);
 
         viewModel.getFlowable(this)
-                // Using AutoDispose to handle subscription lifecycle.
-                // See: https://github.com/uber/AutoDispose.
                 .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
                 .subscribe(pagingData -> pagingAdapter.submitData(getLifecycle(), pagingData));
 

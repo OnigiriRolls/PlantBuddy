@@ -24,7 +24,7 @@ public class PlantViewModel extends AndroidViewModel {
     public Flowable<PagingData<Plant>> getFlowable(AppCompatActivity activity) {
         CoroutineScope viewModelScope = ViewModelKt.getViewModelScope(this);
         Pager<Integer, Plant> pager = new Pager<>(
-                new PagingConfig(/* pageSize = */ 20),
+                new PagingConfig(30),
                 () -> new PlantPagingSource(activity)
         );
 
