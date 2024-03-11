@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="150dp">
+    android:layout_height="150dp"
+    android:padding="@dimen/activity_medium_padding">
 
     <ImageView
         android:id="@+id/plantImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:contentDescription="poza planta" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:contentDescription="poza planta"
+        android:src="@drawable/no_photo" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
         android:orientation="vertical"
-        android:paddingLeft="20dp">
+        android:paddingTop="@dimen/activity_small_padding"
+        android:paddingBottom="@dimen/activity_small_padding">
 
         <TextView
             android:id="@+id/tPlantName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2" />
+            android:text="European Silver Fir"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tProbability"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:visibility="invisible" />
+            android:visibility="gone" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="Confirm"
-            android:visibility="invisible" />
+            android:visibility="gone" />
     </LinearLayout>
 
 </LinearLayout>
