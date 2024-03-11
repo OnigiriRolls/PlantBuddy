@@ -17,4 +17,5 @@
     <string name="flowers">Flowers</string>
     <string name="default_theme">System Default</string>
     <string name="theme">theme</string>
+    <string name="confirm">Confirm</string>
 </resources>

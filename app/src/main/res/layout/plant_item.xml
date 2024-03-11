@@ -2,14 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="150dp"
-    android:padding="@dimen/activity_medium_padding">
+    android:paddingBottom="@dimen/activity_medium_padding">
 
     <ImageView
         android:id="@+id/plantImage"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:contentDescription="poza planta"
         android:src="@drawable/no_photo" />
 
     <LinearLayout
@@ -25,7 +24,6 @@
             android:id="@+id/tPlantName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="European Silver Fir"
             android:textSize="15sp" />
 
         <TextView
@@ -35,9 +33,10 @@
             android:visibility="gone" />
 
         <Button
+            android:id="@+id/bConfirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Confirm"
+            android:text="@string/confirm"
             android:visibility="gone" />
     </LinearLayout>
 

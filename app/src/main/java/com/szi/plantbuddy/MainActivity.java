@@ -22,6 +22,7 @@ import com.szi.plantbuddy.exception.FileException;
 import com.szi.plantbuddy.exception.ModelException;
 import com.szi.plantbuddy.mlmodel.FlowerModel;
 import com.szi.plantbuddy.util.FileUtil;
+import com.szi.plantbuddy.util.ImageUtils;
 import com.szi.plantbuddy.util.ThemeManager;
 
 import java.io.File;
@@ -53,9 +54,10 @@ public class MainActivity extends BaseActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         try {
                             Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(FILE_UTILS.getCurrentPhotoPath()));
+                            Bitmap rotatedImage = ImageUtils.rotateBitmap(imageBitmap, 90);
                             titleText.setVisibility(View.INVISIBLE);
-                            imageView.setImageBitmap(imageBitmap);
-                            runModelAndShowResults(imageBitmap);
+                            imageView.setImageBitmap(rotatedImage);
+                            runModelAndShowResults(rotatedImage);
                         } catch (IOException e) {
                             Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
                         }
@@ -117,4 +119,9 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        FILE_UTILS.deleteImagesFromInternalStorage(this);
+    }
 }

@@ -23,6 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tTitle"
         android:layout_centerInParent="true"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:dividerHeight="0dp"
+        android:divider="@android:color/transparent" />
 
 </RelativeLayout>

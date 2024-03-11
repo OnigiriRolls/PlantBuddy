@@ -1,10 +1,11 @@
 package com.szi.plantbuddy;
 
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.szi.plantbuddy.ui.MlResultItemAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class MlResult extends AppCompatActivity {
 
         if (results != null) {
             ListView resultListView = findViewById(R.id.lResults);
-            final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, results);
+            final MlResultItemAdapter adapter = new MlResultItemAdapter(this, R.layout.plant_item, results);
             resultListView.setAdapter(adapter);
         }
     }

@@ -89,7 +89,7 @@ public class FlowerModel {
 
     private List<String> combineLabelsAndScores(List<String> labels, List<String> scores) {
         return IntStream.range(0, labels.size())
-                .mapToObj(i -> labels.get(i) + "  " + scores.get(i))
+                .mapToObj(i -> labels.get(i) + ":" + scores.get(i))
                 .collect(Collectors.toList());
 
     }
