@@ -58,4 +58,5 @@ dependencies {
     implementation 'com.uber.autodispose2:autodispose-android:2.2.1'
     implementation 'com.uber.autodispose2:autodispose-androidx-lifecycle:2.2.1'
     implementation 'com.squareup.picasso:picasso:2.8'
+    implementation 'com.google.code.gson:gson:2.10.1'
 }

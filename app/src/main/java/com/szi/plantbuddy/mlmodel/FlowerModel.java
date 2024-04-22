@@ -13,15 +13,19 @@ import org.tensorflow.lite.support.label.Category;
 import org.tensorflow.lite.support.model.Model;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class FlowerModel {
-    private final AtomicReference<com.szi.plantbuddy.ml.FlowerModel> flowerModelRef = new AtomicReference<>();
+    private final AtomicReference<com.szi.plantbuddy.ml.Model93001> flowerModelRef = new AtomicReference<>();
 
     public List<String> runModel(MainActivity mainActivity, Bitmap imageBitmap) throws ModelException {
         initModel(mainActivity);
@@ -47,7 +51,7 @@ public class FlowerModel {
 
             flowerModelRef.updateAndGet(model -> {
                 try {
-                    return model == null ? com.szi.plantbuddy.ml.FlowerModel.newInstance(mainActivity.getApplicationContext(), optionsSupplier.get()) : model;
+                    return model == null ? com.szi.plantbuddy.ml.Model93001.newInstance(mainActivity.getApplicationContext(), optionsSupplier.get()) : model;
                 } catch (IOException e) {
                     Log.d("debug", "update and get model ref error ");
                 }
@@ -58,22 +62,35 @@ public class FlowerModel {
 
     private List<String> analyze(Bitmap imageBitmap) throws ModelException {
         TensorImage image = TensorImage.fromBitmap(imageBitmap);
-        //image = ImageUtils.processTensorImage(image);
+        image = ImageUtils.processTensorImage(image);
 
-        com.szi.plantbuddy.ml.FlowerModel flowerModel = flowerModelRef.get();
+        com.szi.plantbuddy.ml.Model93001 flowerModel = flowerModelRef.get();
 
         if (flowerModel == null) {
             throw new ModelException("Model was not initialised successfully!");
         }
 
-        List<Category> outputs = flowerModel.process(image)
-                .getProbabilityAsCategoryList()
-                .stream()
-                .sorted(Comparator.comparing(Category::getScore).reversed())
-                .collect(Collectors.toList());
+        com.szi.plantbuddy.ml.Model93001.Outputs outputs = flowerModel.process(image.getTensorBuffer());
+        float[] outputFeature = outputs.getOutputFeature0AsTensorBuffer().getFloatArray();
+        Log.d("debug", Arrays.toString(outputFeature));
 
+        float sum = 0;
+        for (int i = 0; i < outputFeature.length; i++)
+            sum += outputFeature[i];
         //flowerModel.close();
-        return getFinalResults(outputs);
+        Log.d("debug", "Sum is: " + sum);
+
+        Map<Integer, Float> mappedOutputs = new HashMap<>();
+        for (int i = 0; i < outputFeature.length; i++) {
+            mappedOutputs.put(i, outputFeature[i]);
+        }
+
+        List<Integer> indices = mappedOutputs.keySet().stream().collect(Collectors.toList());
+        indices.sort(Comparator.comparingDouble(i -> outputFeature[i]));
+
+        Log.d("debug", "Indices of the highest 5 numbers: " + indices);
+
+        return getFinalResults(new ArrayList<>());
     }
 
     private List<String> getFinalResults(List<Category> outputs) throws ModelException {
