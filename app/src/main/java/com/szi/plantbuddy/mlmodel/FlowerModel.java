@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.szi.plantbuddy.MainActivity;
 import com.szi.plantbuddy.exception.ModelException;
+import com.szi.plantbuddy.util.ImageUtils;
 
 import org.tensorflow.lite.gpu.CompatibilityList;
 import org.tensorflow.lite.support.image.TensorImage;
@@ -57,6 +58,8 @@ public class FlowerModel {
 
     private List<String> analyze(Bitmap imageBitmap) throws ModelException {
         TensorImage image = TensorImage.fromBitmap(imageBitmap);
+        //image = ImageUtils.processTensorImage(image);
+
         com.szi.plantbuddy.ml.FlowerModel flowerModel = flowerModelRef.get();
 
         if (flowerModel == null) {
@@ -69,6 +72,7 @@ public class FlowerModel {
                 .sorted(Comparator.comparing(Category::getScore).reversed())
                 .collect(Collectors.toList());
 
+        //flowerModel.close();
         return getFinalResults(outputs);
     }
 

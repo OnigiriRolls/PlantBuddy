@@ -49,26 +49,6 @@
             android:layout_gravity="start"
             android:text="@string/gallery"
             android:layout_marginBottom="20dp"/>
-
-        <Button
-            android:id="@+id/bFlowers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/flowers"
-            android:layout_marginBottom="10dp"/>
-
-        <Button
-            android:id="@+id/bFruitsVeggies"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/fruits_vegetables"
-            android:layout_marginBottom="10dp"/>
-
-        <Button
-            android:id="@+id/bDiseases"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/diseases" />
     </LinearLayout>
 
     <include
