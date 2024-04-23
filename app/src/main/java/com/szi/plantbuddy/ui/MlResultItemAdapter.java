@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.szi.plantbuddy.R;
@@ -47,8 +46,7 @@ public class MlResultItemAdapter extends ArrayAdapter<FlowerResult> {
             FlowerResult result = results.get(position);
             String text = result.getFlowerLabel();
             itemHolder.tPlantName.setText(text);
-            itemHolder.tProbability.setVisibility(View.VISIBLE);
-            String probability = result.getProbability().toString();
+            String probability = "Probability: " + result.getProbability().toString() + "%";
             itemHolder.tProbability.setText(probability);
         }
 
@@ -58,6 +56,5 @@ public class MlResultItemAdapter extends ArrayAdapter<FlowerResult> {
     private static class ItemHolder {
         TextView tPlantName;
         TextView tProbability;
-        ImageView image;
     }
 }

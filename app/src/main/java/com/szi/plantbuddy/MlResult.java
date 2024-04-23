@@ -23,7 +23,7 @@ public class MlResult extends AppCompatActivity {
 
         if (results != null) {
             ListView resultListView = findViewById(R.id.lResults);
-            final MlResultItemAdapter adapter = new MlResultItemAdapter(this, R.layout.plant_item, results);
+            final MlResultItemAdapter adapter = new MlResultItemAdapter(this, R.layout.plant_item_title, results);
             resultListView.setAdapter(adapter);
         }
     }
