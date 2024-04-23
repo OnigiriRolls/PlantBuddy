@@ -5,6 +5,7 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.szi.plantbuddy.mlmodel.FlowerResult;
 import com.szi.plantbuddy.ui.MlResultItemAdapter;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class MlResult extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ml_result);
 
-        List<String> results = getIntent().getStringArrayListExtra("results");
+        List<FlowerResult> results = (List<FlowerResult>) getIntent().getSerializableExtra("results");
 
         if (results != null) {
             ListView resultListView = findViewById(R.id.lResults);

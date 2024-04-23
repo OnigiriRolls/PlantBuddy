@@ -20,20 +20,24 @@ import androidx.core.content.FileProvider;
 
 import com.szi.plantbuddy.exception.FileException;
 import com.szi.plantbuddy.exception.ModelException;
+import com.szi.plantbuddy.mlmodel.FlowerLabel;
 import com.szi.plantbuddy.mlmodel.FlowerModel;
+import com.szi.plantbuddy.mlmodel.FlowerResult;
 import com.szi.plantbuddy.util.FileUtil;
 import com.szi.plantbuddy.util.ImageUtils;
+import com.szi.plantbuddy.util.JsonReader;
 import com.szi.plantbuddy.util.ThemeManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private static final FlowerModel FLOWER_MODEL = new FlowerModel();
     private static final FileUtil FILE_UTILS = new FileUtil();
+    private static final String LABELS_JSON_PATH = "oxford_labels.json";
     private ActivityResultLauncher<Intent> cameraActivityResultLauncher;
     private ImageView imageView;
     private TextView titleText;
@@ -66,18 +70,19 @@ public class MainActivity extends BaseActivity {
     }
 
     private void runModelAndShowResults(Bitmap imageBitmap) {
-        List<String> results = null;
+        List<FlowerResult> results = null;
         try {
-            results = FLOWER_MODEL.runModel(this, imageBitmap);
+            List<FlowerLabel> labels = JsonReader.readLabelsJson(LABELS_JSON_PATH, this);
+            results = FLOWER_MODEL.runModel(this, imageBitmap, labels);
             startActivityWithResults(results);
-        } catch (ModelException e) {
+        } catch (ModelException | FileException e) {
             Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
         }
     }
 
-    private void startActivityWithResults(List<String> results) {
+    private void startActivityWithResults(List<FlowerResult> results) {
         Intent intent = new Intent(this, MlResult.class);
-        intent.putStringArrayListExtra("results", new ArrayList<>(results));
+        intent.putExtra("results", (Serializable) results);
         startActivity(intent);
     }
 
@@ -90,7 +95,8 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {

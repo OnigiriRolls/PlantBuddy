@@ -1,5 +1,7 @@
 package com.szi.plantbuddy.mlmodel;
 
+import androidx.annotation.NonNull;
+
 import java.util.Objects;
 
 public class FlowerLabel {
@@ -33,5 +35,11 @@ public class FlowerLabel {
     @Override
     public int hashCode() {
         return Objects.hash(name, label);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return name + " " + label;
     }
 }

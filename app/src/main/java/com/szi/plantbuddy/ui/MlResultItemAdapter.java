@@ -2,7 +2,6 @@ package com.szi.plantbuddy.ui;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.szi.plantbuddy.R;
+import com.szi.plantbuddy.mlmodel.FlowerResult;
 
 import java.util.List;
 
-public class MlResultItemAdapter extends ArrayAdapter<String> {
+public class MlResultItemAdapter extends ArrayAdapter<FlowerResult> {
     private final Context context;
-    private final List<String> results;
+    private final List<FlowerResult> results;
     private final int layoutResID;
 
-    public MlResultItemAdapter(Context context, int layoutResID, List<String> results) {
+    public MlResultItemAdapter(Context context, int layoutResID, List<FlowerResult> results) {
         super(context, layoutResID, results);
 
         this.context = context;
@@ -47,16 +47,12 @@ public class MlResultItemAdapter extends ArrayAdapter<String> {
             itemHolder = (ItemHolder) view.getTag();
         }
         if (results != null && results.size() >= position) {
-            final String tItem = results.get(position);
-            Log.d("debug", tItem);
-            String[] elements = tItem.split(":");
-            if (elements.length >= 2) {
-                itemHolder.tPlantName.setText(elements[0]);
-                Log.d("debug", elements[1]);
-                itemHolder.tProbability.setVisibility(View.VISIBLE);
-                itemHolder.tProbability.setText(elements[1]);
-
-            }
+            FlowerResult result = results.get(position);
+            String text = result.getFlowerLabel();
+            itemHolder.tPlantName.setText(text);
+            itemHolder.tProbability.setVisibility(View.VISIBLE);
+            String probability = result.getProbability().toString();
+            itemHolder.tProbability.setText(probability);
             itemHolder.bConfirm.setVisibility(View.VISIBLE);
         }
 

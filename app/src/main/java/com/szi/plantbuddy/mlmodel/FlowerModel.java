@@ -27,9 +27,9 @@ import java.util.stream.IntStream;
 public class FlowerModel {
     private final AtomicReference<com.szi.plantbuddy.ml.Model93001> flowerModelRef = new AtomicReference<>();
 
-    public List<String> runModel(MainActivity mainActivity, Bitmap imageBitmap) throws ModelException {
+    public  List<FlowerResult> runModel(MainActivity mainActivity, Bitmap imageBitmap, List<FlowerLabel> labels) throws ModelException {
         initModel(mainActivity);
-        return analyze(imageBitmap);
+        return analyze(imageBitmap, labels);
     }
 
     private void initModel(MainActivity mainActivity) {
@@ -60,7 +60,7 @@ public class FlowerModel {
         }
     }
 
-    private List<String> analyze(Bitmap imageBitmap) throws ModelException {
+    private List<FlowerResult> analyze(Bitmap imageBitmap, List<FlowerLabel> labels) throws ModelException {
         TensorImage image = TensorImage.fromBitmap(imageBitmap);
         image = ImageUtils.processTensorImage(image);
 
@@ -80,17 +80,18 @@ public class FlowerModel {
         //flowerModel.close();
         Log.d("debug", "Sum is: " + sum);
 
+        List<FlowerResult> results = new ArrayList<>();
         Map<Integer, Float> mappedOutputs = new HashMap<>();
         for (int i = 0; i < outputFeature.length; i++) {
             mappedOutputs.put(i, outputFeature[i]);
+            results.add(new FlowerResult(labels.get(i).toString(), outputFeature[i]));
         }
 
         List<Integer> indices = mappedOutputs.keySet().stream().collect(Collectors.toList());
         indices.sort(Comparator.comparingDouble(i -> outputFeature[i]));
-
         Log.d("debug", "Indices of the highest 5 numbers: " + indices);
 
-        return getFinalResults(new ArrayList<>());
+        return results.stream().sorted(Comparator.comparingDouble(FlowerResult::getProbability).reversed()).collect(Collectors.toList());
     }
 
     private List<String> getFinalResults(List<Category> outputs) throws ModelException {
