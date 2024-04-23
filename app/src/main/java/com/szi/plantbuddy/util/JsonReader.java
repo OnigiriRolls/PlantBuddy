@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 import com.szi.plantbuddy.exception.FileException;
 import com.szi.plantbuddy.mlmodel.FlowerLabel;
 
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
