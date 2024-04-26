@@ -12,6 +12,8 @@ import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.model.Model;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -65,7 +67,14 @@ public class FlowerModel {
             throw new ModelException("Model was not initialised successfully!");
         }
 
+        Log.d("debug", "START inference");
+        Instant start = Instant.now();
         com.szi.plantbuddy.ml.Model93001.Outputs outputs = flowerModel.process(image.getTensorBuffer());
+        Instant finish = Instant.now();
+        long timeElapsed = Duration.between(start, finish).toMillis();
+        Log.d("debug", "Time elapsed" + timeElapsed);
+        Log.d("debug", "FINISH inference");
+
         float[] outputFeature = outputs.getOutputFeature0AsTensorBuffer().getFloatArray();
 
         return getFinalResults(outputFeature, labels);
