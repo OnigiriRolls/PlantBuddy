@@ -17,14 +17,4 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (!this.getClass().equals(MainActivity.class))
             startActivityWithoutFinish(MainActivity.class);
     }
-
-    public void onPlantsCollection(View view) {
-        if (!this.getClass().equals(PlantsCollectionActivity.class))
-            startActivityWithoutFinish(PlantsCollectionActivity.class);
-    }
-
-    public void onProfile(View view) {
-        if (!this.getClass().equals(ProfileActivity.class))
-            startActivityWithoutFinish(ProfileActivity.class);
-    }
 }

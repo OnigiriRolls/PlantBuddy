@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class FlowerModel {
-    private final AtomicReference<com.szi.plantbuddy.ml.Model93001> flowerModelRef = new AtomicReference<>();
+    private final AtomicReference<com.szi.plantbuddy.ml.ModelEffnet2Apr> flowerModelRef = new AtomicReference<>();
 
     public List<FlowerResult> runModel(MainActivity mainActivity, Bitmap imageBitmap, List<FlowerLabel> labels) throws ModelException {
         initModel(mainActivity);
@@ -48,7 +48,7 @@ public class FlowerModel {
 
             flowerModelRef.updateAndGet(model -> {
                 try {
-                    return model == null ? com.szi.plantbuddy.ml.Model93001.newInstance(mainActivity.getApplicationContext(), optionsSupplier.get()) : model;
+                    return model == null ? com.szi.plantbuddy.ml.ModelEffnet2Apr.newInstance(mainActivity.getApplicationContext(), optionsSupplier.get()) : model;
                 } catch (IOException e) {
                     Log.d("debug", "update and get model ref error ");
                 }
@@ -61,7 +61,7 @@ public class FlowerModel {
         TensorImage image = TensorImage.fromBitmap(imageBitmap);
         image = ImageUtils.processTensorImage(image);
 
-        com.szi.plantbuddy.ml.Model93001 flowerModel = flowerModelRef.get();
+        com.szi.plantbuddy.ml.ModelEffnet2Apr flowerModel = flowerModelRef.get();
 
         if (flowerModel == null) {
             throw new ModelException("Model was not initialised successfully!");
@@ -69,7 +69,7 @@ public class FlowerModel {
 
         Log.d("debug", "START inference");
         Instant start = Instant.now();
-        com.szi.plantbuddy.ml.Model93001.Outputs outputs = flowerModel.process(image.getTensorBuffer());
+        com.szi.plantbuddy.ml.ModelEffnet2Apr.Outputs outputs = flowerModel.process(image.getTensorBuffer());
         Instant finish = Instant.now();
         long timeElapsed = Duration.between(start, finish).toMillis();
         Log.d("debug", "Time elapsed" + timeElapsed);

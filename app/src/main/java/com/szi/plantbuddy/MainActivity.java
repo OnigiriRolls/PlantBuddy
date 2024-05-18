@@ -26,7 +26,6 @@ import com.szi.plantbuddy.mlmodel.FlowerResult;
 import com.szi.plantbuddy.util.FileUtil;
 import com.szi.plantbuddy.util.ImageUtils;
 import com.szi.plantbuddy.util.JsonReader;
-import com.szi.plantbuddy.util.ThemeManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,12 +43,10 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ThemeManager.getInstance(this);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        imageView = findViewById(R.id.imageView1);
+        imageView = findViewById(R.id.imageView);
         titleText = findViewById(R.id.tTitle);
 
         cameraActivityResultLauncher = registerForActivityResult(
@@ -59,8 +56,9 @@ public class MainActivity extends BaseActivity {
                         try {
                             Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(FILE_UTILS.getCurrentPhotoPath()));
                             Bitmap rotatedImage = ImageUtils.rotateBitmap(imageBitmap, 90);
-                            titleText.setVisibility(View.INVISIBLE);
+                            titleText.setVisibility(View.GONE);
                             imageView.setImageBitmap(rotatedImage);
+                            imageView.setVisibility(View.VISIBLE);
                             runModelAndShowResults(rotatedImage);
                         } catch (IOException e) {
                             Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();

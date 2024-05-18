@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="@dimen/activity_padding"
     tools:context=".MainActivity">
 
@@ -10,52 +11,32 @@
         android:id="@+id/tTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/layoutButtons"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:layout_marginBottom="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
         android:text="@string/take_photo_or_gallery"
         android:textFontWeight="700" />
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/layoutButtons"
+        android:layout_gravity="center"
         android:layout_marginBottom="50dp"
-        android:contentDescription="@string/photo" />
-
-    <LinearLayout
-        android:id="@+id/layoutButtons"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_above="@id/footer"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/photo"
         android:gravity="center"
-        android:orientation="vertical">
+        android:visibility="gone" />
 
-        <Button
-            android:id="@+id/bScan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onClick"
-            android:text="@string/takePhoto"
-            android:layout_marginBottom="10dp"/>
 
-        <Button
-            android:id="@+id/bGallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:text="@string/gallery"
-            android:layout_marginBottom="20dp"/>
-    </LinearLayout>
+    <Button
+        android:id="@+id/bScan"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:onClick="onClick"
+        android:text="@string/takePhoto" />
 
-    <include
-        android:id="@+id/footer"
-        layout="@layout/footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
-
-</RelativeLayout>
+</LinearLayout>
