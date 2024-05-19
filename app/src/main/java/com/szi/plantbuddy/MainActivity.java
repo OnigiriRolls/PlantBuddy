@@ -20,9 +20,11 @@ import androidx.core.content.FileProvider;
 
 import com.szi.plantbuddy.exception.FileException;
 import com.szi.plantbuddy.exception.ModelException;
+import com.szi.plantbuddy.mlmodel.ConvNet36Model;
+import com.szi.plantbuddy.mlmodel.ConvNetModel;
 import com.szi.plantbuddy.mlmodel.FlowerLabel;
-import com.szi.plantbuddy.mlmodel.FlowerModel;
 import com.szi.plantbuddy.mlmodel.FlowerResult;
+import com.szi.plantbuddy.mlmodel.ModelManager;
 import com.szi.plantbuddy.util.FileUtil;
 import com.szi.plantbuddy.util.ImageUtils;
 import com.szi.plantbuddy.util.JsonReader;
@@ -34,7 +36,6 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity {
     private static final int MY_CAMERA_REQUEST_CODE = 100;
-    private static final FlowerModel FLOWER_MODEL = new FlowerModel();
     private static final FileUtil FILE_UTILS = new FileUtil();
     private static final String LABELS_JSON_PATH = "oxford_labels.json";
     private ActivityResultLauncher<Intent> cameraActivityResultLauncher;
@@ -71,7 +72,13 @@ public class MainActivity extends BaseActivity {
         List<FlowerResult> results = null;
         try {
             List<FlowerLabel> labels = JsonReader.readLabelsJson(LABELS_JSON_PATH, this);
-            results = FLOWER_MODEL.runModel(this, imageBitmap, labels);
+            ModelManager modelManager = new ModelManager();
+//            modelManager.addModelRunner(new MobileNetModel());
+//            modelManager.addModelRunner(new EfficientNetModel());
+//            modelManager.addModelRunner(new RestNetModel());
+            modelManager.addModelRunner(new ConvNetModel());
+            modelManager.addModelRunner(new ConvNet36Model());
+            results = modelManager.runModels(this, imageBitmap, labels);
             startActivityWithResults(results);
         } catch (ModelException | FileException e) {
             Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
