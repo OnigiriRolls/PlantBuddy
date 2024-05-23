@@ -9,6 +9,7 @@ import com.szi.plantbuddy.exception.ModelException;
 import com.szi.plantbuddy.util.ImageUtils;
 
 import org.tensorflow.lite.gpu.CompatibilityList;
+import org.tensorflow.lite.support.common.Operator;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.model.Model;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
@@ -30,6 +31,11 @@ public abstract class BaseModel<T> implements IModelRunner {
     protected abstract T createModelInstance(Context context, Model.Options options) throws IOException;
 
     protected abstract TensorBuffer runInference(T model, TensorImage image);
+
+    protected abstract float getMean();
+
+    protected abstract float getStddev();
+    protected abstract boolean getApplyCastOp();
 
     @Override
     public List<FlowerResult> runModel(MainActivity mainActivity, Bitmap imageBitmap, List<FlowerLabel> labels) throws ModelException {
@@ -67,7 +73,7 @@ public abstract class BaseModel<T> implements IModelRunner {
 
     private List<FlowerResult> analyze(Bitmap imageBitmap, List<FlowerLabel> labels) throws ModelException {
         TensorImage image = TensorImage.fromBitmap(imageBitmap);
-        image = ImageUtils.processTensorImage(image);
+        image = ImageUtils.processTensorImage(image, getMean(), getStddev(), getApplyCastOp());
 
         T model = modelRef.get();
 

@@ -18,4 +18,19 @@ public class ConvNetModel extends BaseModel<com.szi.plantbuddy.ml.Model129conv17
     protected TensorBuffer runInference(com.szi.plantbuddy.ml.Model129conv17Re2Ad1 model, TensorImage image) {
         return model.process(image.getTensorBuffer()).getOutputFeature0AsTensorBuffer();
     }
+
+    @Override
+    protected float getMean() {
+        return 0f;
+    }
+
+    @Override
+    protected float getStddev() {
+        return 255f;
+    }
+
+    @Override
+    protected boolean getApplyCastOp() {
+        return false;
+    }
 }

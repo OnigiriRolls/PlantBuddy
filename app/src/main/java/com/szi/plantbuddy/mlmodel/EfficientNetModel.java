@@ -8,15 +8,30 @@ import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
 import java.io.IOException;
 
-public class EfficientNetModel extends BaseModel<com.szi.plantbuddy.ml.ModelEffnet2Apr> {
+public class EfficientNetModel extends BaseModel<com.szi.plantbuddy.ml.EffnetAfterFineTf1> {
     @Override
-    protected com.szi.plantbuddy.ml.ModelEffnet2Apr createModelInstance(Context context, Model.Options options) throws IOException {
-        return com.szi.plantbuddy.ml.ModelEffnet2Apr.newInstance(context, options);
+    protected com.szi.plantbuddy.ml.EffnetAfterFineTf1 createModelInstance(Context context, Model.Options options) throws IOException {
+        return com.szi.plantbuddy.ml.EffnetAfterFineTf1.newInstance(context, options);
     }
 
     @Override
-    protected TensorBuffer runInference(com.szi.plantbuddy.ml.ModelEffnet2Apr model, TensorImage image) {
+    protected TensorBuffer runInference(com.szi.plantbuddy.ml.EffnetAfterFineTf1 model, TensorImage image) {
         return model.process(image.getTensorBuffer()).getOutputFeature0AsTensorBuffer();
+    }
+
+    @Override
+    protected float getMean() {
+        return 0f;
+    }
+
+    @Override
+    protected float getStddev() {
+        return 1f;
+    }
+
+    @Override
+    protected boolean getApplyCastOp() {
+        return true;
     }
 }
 
