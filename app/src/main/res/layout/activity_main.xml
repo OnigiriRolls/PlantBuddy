@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,46 +9,41 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/tTitle"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="50dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/identify_flowers_take_photo"
-        android:textFontWeight="700" />
-
-    <ImageView
-        android:id="@+id/flowerAnim"
-        android:layout_width="240dp"
-        android:layout_height="240dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="50dp"
-        android:contentDescription="@string/flower_animation"
-        android:src="@drawable/flower_anim" />
-
-    <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/tCharacter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="50dp"
-        android:layout_weight="1"
-        android:contentDescription="@string/photo"
+        android:layout_above="@id/tHelp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="150dp"
         android:gravity="center"
-        android:visibility="gone" />
+        android:textSize="17sp"
+        android:text="@string/hello_human_n_n_i_am_lily_your_plant_buddy"
+        android:textFontWeight="500"
+        app:drawableLeftCompat="@drawable/character_happy_small" />
+
+    <TextView
+        android:id="@+id/tHelp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bScan"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp"
+        android:gravity="center"
+        android:textSize="17sp"
+        android:text="@string/take_a_photo_help_identify_"
+        android:textFontWeight="500" />
 
     <Button
         android:id="@+id/bScan"
         android:layout_width="150dp"
         android:layout_height="65dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
         android:onClick="onClick"
         app:icon="@drawable/ic_photo"
         app:iconGravity="textStart"
         app:iconPadding="1dp"
         app:iconSize="50dp" />
 
-</LinearLayout>
+</RelativeLayout>

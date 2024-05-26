@@ -1,26 +1,24 @@
 package com.szi.plantbuddy;
 
+import static com.szi.plantbuddy.util.WaitAnimationDialog.hideLoadingDialog;
+import static com.szi.plantbuddy.util.WaitAnimationDialog.showLoadingDialog;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Animatable2;
-import android.graphics.drawable.AnimatedVectorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 
 import com.szi.plantbuddy.exception.FileException;
@@ -46,21 +44,13 @@ public class MainActivity extends BaseActivity {
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private static final FileUtil FILE_UTILS = new FileUtil();
     private static final String LABELS_JSON_PATH = "oxford_labels.json";
-    private final Handler handler = new Handler(Looper.getMainLooper());
     private ActivityResultLauncher<Intent> cameraActivityResultLauncher;
-    private ImageView imageView;
-    private TextView titleText;
-    private boolean shouldContinueAnimation = true;
-    private AnimatedVectorDrawable anim;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        imageView = findViewById(R.id.imageView);
-        titleText = findViewById(R.id.tTitle);
-        ImageView flowerAnim = findViewById(R.id.flowerAnim);
 
         cameraActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -69,37 +59,23 @@ public class MainActivity extends BaseActivity {
                         try {
                             Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(FILE_UTILS.getCurrentPhotoPath()));
                             Bitmap rotatedImage = ImageUtils.rotateBitmap(imageBitmap, 90);
-                            titleText.setVisibility(View.GONE);
-                            imageView.setImageBitmap(rotatedImage);
-                            imageView.setVisibility(View.VISIBLE);
+                            Log.d("debug", "before run");
                             runModelAndShowResults(rotatedImage);
+                            Log.d("debug", "after run");
                         } catch (IOException e) {
                             Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
                         }
+                    } else {
+                        Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
                     }
                 });
-
-        anim = (AnimatedVectorDrawable) flowerAnim.getDrawable();
-
-        Animatable2.AnimationCallback animationCallback = new Animatable2.AnimationCallback() {
-            @Override
-            public void onAnimationEnd(Drawable drawable) {
-                if (shouldContinueAnimation) {
-                    handler.postDelayed(() -> anim.start(), 500);
-                }
-            }
-        };
-        anim.registerAnimationCallback(animationCallback);
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        anim.start();
     }
 
     private void runModelAndShowResults(Bitmap imageBitmap) {
+        Log.d("debug", "before dialog");
+        dialog = showLoadingDialog(this);
+        dialog.show();
+        Log.d("debug", "after dialog");
         List<FlowerResult> results = null;
         try {
             List<FlowerLabel> labels = JsonReader.readLabelsJson(LABELS_JSON_PATH, this);
@@ -110,8 +86,12 @@ public class MainActivity extends BaseActivity {
             modelManager.addModelRunner(new ConvNetModel());
             modelManager.addModelRunner(new ConvNet36Model());
             results = modelManager.runModels(this, imageBitmap, labels);
+            hideLoadingDialog(dialog);
+            Log.d("debug", "after hide");
             startActivityWithResults(results);
         } catch (ModelException | FileException e) {
+            hideLoadingDialog(dialog);
+            Log.d("debug", "after hide");
             Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
         }
     }
@@ -158,6 +138,7 @@ public class MainActivity extends BaseActivity {
             Uri photoURI = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", photoFile);
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
             cameraActivityResultLauncher.launch(cameraIntent);
+            Log.d("debug", "after launch");
         }
     }
 
@@ -165,8 +146,5 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         FILE_UTILS.deleteImagesFromInternalStorage(this);
-        shouldContinueAnimation = false;
-        handler.removeCallbacksAndMessages(null);
-        anim.clearAnimationCallbacks();
     }
 }
