@@ -9,6 +9,8 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -44,6 +46,7 @@ public class MainActivity extends BaseActivity {
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private static final FileUtil FILE_UTILS = new FileUtil();
     private static final String LABELS_JSON_PATH = "oxford_labels.json";
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private ActivityResultLauncher<Intent> cameraActivityResultLauncher;
     private ImageView imageView;
     private TextView titleText;
@@ -82,7 +85,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onAnimationEnd(Drawable drawable) {
                 if (shouldContinueAnimation) {
-                     anim.start();
+                    handler.postDelayed(() -> anim.start(), 500);
                 }
             }
         };
@@ -162,5 +165,8 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         FILE_UTILS.deleteImagesFromInternalStorage(this);
+        shouldContinueAnimation = false;
+        handler.removeCallbacksAndMessages(null);
+        anim.clearAnimationCallbacks();
     }
 }
