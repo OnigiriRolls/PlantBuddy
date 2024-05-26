@@ -20,6 +20,15 @@
         android:textFontWeight="700" />
 
     <ImageView
+        android:id="@+id/flowerAnim"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="50dp"
+        android:contentDescription="@string/flower_animation"
+        android:src="@drawable/flower_anim" />
+
+    <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,6 +49,6 @@
         app:icon="@drawable/ic_photo"
         app:iconGravity="textStart"
         app:iconPadding="1dp"
-        app:iconSize="50dp"/>
+        app:iconSize="50dp" />
 
 </LinearLayout>

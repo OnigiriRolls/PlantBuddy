@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Animatable2;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -44,6 +47,8 @@ public class MainActivity extends BaseActivity {
     private ActivityResultLauncher<Intent> cameraActivityResultLauncher;
     private ImageView imageView;
     private TextView titleText;
+    private boolean shouldContinueAnimation = true;
+    private AnimatedVectorDrawable anim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,7 @@ public class MainActivity extends BaseActivity {
 
         imageView = findViewById(R.id.imageView);
         titleText = findViewById(R.id.tTitle);
+        ImageView flowerAnim = findViewById(R.id.flowerAnim);
 
         cameraActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -69,6 +75,25 @@ public class MainActivity extends BaseActivity {
                         }
                     }
                 });
+
+        anim = (AnimatedVectorDrawable) flowerAnim.getDrawable();
+
+        Animatable2.AnimationCallback animationCallback = new Animatable2.AnimationCallback() {
+            @Override
+            public void onAnimationEnd(Drawable drawable) {
+                if (shouldContinueAnimation) {
+                     anim.start();
+                }
+            }
+        };
+        anim.registerAnimationCallback(animationCallback);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        anim.start();
     }
 
     private void runModelAndShowResults(Bitmap imageBitmap) {

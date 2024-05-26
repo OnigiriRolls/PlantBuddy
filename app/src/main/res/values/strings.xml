@@ -18,4 +18,5 @@
     <string name="default_theme">System Default</string>
     <string name="theme">theme</string>
     <string name="confirm">Confirm</string>
+    <string name="flower_animation">flower animation</string>
 </resources>
