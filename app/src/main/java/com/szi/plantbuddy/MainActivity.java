@@ -1,8 +1,5 @@
 package com.szi.plantbuddy;
 
-import static com.szi.plantbuddy.util.WaitAnimationDialog.hideLoadingDialog;
-import static com.szi.plantbuddy.util.WaitAnimationDialog.showLoadingDialog;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,8 +14,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 
 import com.szi.plantbuddy.exception.FileException;
@@ -34,23 +29,30 @@ import com.szi.plantbuddy.mlmodel.RestNetModel;
 import com.szi.plantbuddy.util.FileUtil;
 import com.szi.plantbuddy.util.ImageUtils;
 import com.szi.plantbuddy.util.JsonReader;
+import com.szi.plantbuddy.util.WaitAnimationDialog;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends BaseActivity {
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private static final FileUtil FILE_UTILS = new FileUtil();
     private static final String LABELS_JSON_PATH = "oxford_labels.json";
     private ActivityResultLauncher<Intent> cameraActivityResultLauncher;
-    private AlertDialog dialog;
+    private WaitAnimationDialog dialog;
+    private List<FlowerResult> results;
+    private ExecutorService executorService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        dialog = new WaitAnimationDialog();
+        executorService = Executors.newSingleThreadExecutor();
 
         cameraActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -60,7 +62,8 @@ public class MainActivity extends BaseActivity {
                             Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(FILE_UTILS.getCurrentPhotoPath()));
                             Bitmap rotatedImage = ImageUtils.rotateBitmap(imageBitmap, 90);
                             Log.d("debug", "before run");
-                            runModelAndShowResults(rotatedImage);
+                            dialog.showLoadingDialog(this, this::onDialogDismissed);
+                            executorService.execute(() -> runModelAndShowResults(rotatedImage));
                             Log.d("debug", "after run");
                         } catch (IOException e) {
                             Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
@@ -72,10 +75,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void runModelAndShowResults(Bitmap imageBitmap) {
-        Log.d("debug", "before dialog");
-        dialog = showLoadingDialog(this);
-        dialog.show();
-        Log.d("debug", "after dialog");
+        Log.d("debug", "before results");
         List<FlowerResult> results = null;
         try {
             List<FlowerLabel> labels = JsonReader.readLabelsJson(LABELS_JSON_PATH, this);
@@ -86,13 +86,21 @@ public class MainActivity extends BaseActivity {
             modelManager.addModelRunner(new ConvNetModel());
             modelManager.addModelRunner(new ConvNet36Model());
             results = modelManager.runModels(this, imageBitmap, labels);
-            hideLoadingDialog(dialog);
+            dialog.stopAnimationWhenDone();
             Log.d("debug", "after hide");
-            startActivityWithResults(results);
+//            startActivityWithResults(results);
+            this.results = results;
         } catch (ModelException | FileException e) {
-            hideLoadingDialog(dialog);
+            dialog.stopAnimationWhenDone();
             Log.d("debug", "after hide");
             Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void onDialogDismissed() {
+        Log.d("debug", "dialog dismissed");
+        if (results != null) {
+            startActivityWithResults(results);
         }
     }
 
@@ -107,6 +115,7 @@ public class MainActivity extends BaseActivity {
             requestPermissions(new String[]{android.Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
         } else {
             startCameraSimple();
+            Log.d("debug", "after start camera simple");
         }
     }
 
@@ -143,8 +152,17 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        dialog.dismissDialog();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         FILE_UTILS.deleteImagesFromInternalStorage(this);
+        if (executorService != null) {
+            executorService.shutdown();
+        }
     }
 }

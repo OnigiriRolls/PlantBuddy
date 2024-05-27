@@ -14,13 +14,18 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.szi.plantbuddy.BaseActivity;
 import com.szi.plantbuddy.R;
+import com.szi.plantbuddy.ui.OnDialogDismissListener;
 
 public class WaitAnimationDialog {
-    private static final Handler handler = new Handler(Looper.getMainLooper());
-    private static boolean shouldContinueAnimation = true;
-    private static AnimatedVectorDrawable anim;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final int MINIM_LOOPS = 2;
+    private AnimatedVectorDrawable anim;
+    private boolean shouldContinueAnimation = true;
+    private AlertDialog dialog;
+    private int loopsCounter = 1;
 
-    public static AlertDialog showLoadingDialog(BaseActivity activity) {
+    public void showLoadingDialog(BaseActivity activity, OnDialogDismissListener onDismissListener) {
+        loopsCounter = 1;
         LayoutInflater inflater = activity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_loading, null);
 
@@ -34,31 +39,35 @@ public class WaitAnimationDialog {
         Animatable2.AnimationCallback animationCallback = new Animatable2.AnimationCallback() {
             @Override
             public void onAnimationEnd(Drawable drawable) {
-                if (shouldContinueAnimation) {
+                if (shouldContinueAnimation || loopsCounter < MINIM_LOOPS) {
+                    Log.d("debug", loopsCounter + " " + shouldContinueAnimation);
+                    loopsCounter++;
                     handler.postDelayed(() -> anim.start(), 500);
+                } else {
+                    Log.d("debug", "dismiss");
+                    handler.removeCallbacksAndMessages(null);
+                    anim.clearAnimationCallbacks();
+                    if (onDismissListener != null) {
+                        onDismissListener.onDismiss();
+                    }
                 }
             }
         };
         anim.registerAnimationCallback(animationCallback);
-
+        dialog.show();
         anim.start();
-
-        return dialog;
+        this.dialog = dialog;
     }
 
-    public static void hideLoadingDialog(AlertDialog dialog) {
+    public void stopAnimationWhenDone() {
         Log.d("debug", "in hide");
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        Log.d("debug", "after thread sleep");
         if (dialog != null && dialog.isShowing()) {
             shouldContinueAnimation = false;
-            handler.removeCallbacksAndMessages(null);
-            anim.clearAnimationCallbacks();
+        }
+    }
+
+    public void dismissDialog() {
+        if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
     }
