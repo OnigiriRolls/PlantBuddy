@@ -1,5 +1,5 @@
 package com.szi.plantbuddy.ui;
 
-public interface OnDialogDismissListener {
+public interface IOnDialogDismissListener {
     void onDismiss();
 }

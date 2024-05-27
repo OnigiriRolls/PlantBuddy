@@ -71,4 +71,10 @@ public class FlowerResult implements Parcelable {
         dest.writeFloat(probability);
         dest.writeString(flowerLabel);
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return flowerLabel + " " + probability;
+    }
 }

@@ -31,6 +31,7 @@ import com.szi.plantbuddy.util.ImageUtils;
 import com.szi.plantbuddy.util.JsonReader;
 import com.szi.plantbuddy.util.WaitAnimationDialog;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -46,6 +47,7 @@ public class MainActivity extends BaseActivity {
     private WaitAnimationDialog dialog;
     private List<FlowerResult> results;
     private ExecutorService executorService;
+    private String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class MainActivity extends BaseActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         try {
                             Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(FILE_UTILS.getCurrentPhotoPath()));
+                            this.imagePath = FILE_UTILS.getCurrentPhotoPath();
                             Bitmap rotatedImage = ImageUtils.rotateBitmap(imageBitmap, 90);
                             Log.d("debug", "before run");
                             dialog.showLoadingDialog(this, this::onDialogDismissed);
@@ -88,7 +91,6 @@ public class MainActivity extends BaseActivity {
             results = modelManager.runModels(this, imageBitmap, labels);
             dialog.stopAnimationWhenDone();
             Log.d("debug", "after hide");
-//            startActivityWithResults(results);
             this.results = results;
         } catch (ModelException | FileException e) {
             dialog.stopAnimationWhenDone();
@@ -100,13 +102,15 @@ public class MainActivity extends BaseActivity {
     private void onDialogDismissed() {
         Log.d("debug", "dialog dismissed");
         if (results != null) {
-            startActivityWithResults(results);
+            startActivityWithResults(results, imagePath);
         }
     }
 
-    private void startActivityWithResults(List<FlowerResult> results) {
+    private void startActivityWithResults(List<FlowerResult> results, String imagePath) {
         Intent intent = new Intent(this, MlResult.class);
         intent.putExtra("results", (Serializable) results);
+        intent.putExtra("imagePath", imagePath);
+
         startActivity(intent);
     }
 

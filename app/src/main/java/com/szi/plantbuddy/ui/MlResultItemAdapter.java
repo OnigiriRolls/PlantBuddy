@@ -8,17 +8,20 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.szi.plantbuddy.R;
-import com.szi.plantbuddy.mlmodel.FlowerResult;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
-public class MlResultItemAdapter extends ArrayAdapter<FlowerResult> {
+public class MlResultItemAdapter extends ArrayAdapter<String> {
     private final Context context;
-    private final List<FlowerResult> results;
+    private final List<String> results;
     private final int layoutResID;
 
-    public MlResultItemAdapter(Context context, int layoutResID, List<FlowerResult> results) {
+    public MlResultItemAdapter(Context context, int layoutResID, List<String> results) {
         super(context, layoutResID, results);
 
         this.context = context;
@@ -26,8 +29,9 @@ public class MlResultItemAdapter extends ArrayAdapter<FlowerResult> {
         this.results = results;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         ItemHolder itemHolder;
         View view = convertView;
 
@@ -37,17 +41,14 @@ public class MlResultItemAdapter extends ArrayAdapter<FlowerResult> {
 
             view = inflater.inflate(layoutResID, parent, false);
             itemHolder.tPlantName = view.findViewById(R.id.tPlantName);
-            itemHolder.tProbability = view.findViewById(R.id.tProbability);
             view.setTag(itemHolder);
         } else {
             itemHolder = (ItemHolder) view.getTag();
         }
         if (results != null && results.size() >= position) {
-            FlowerResult result = results.get(position);
-            String text = result.getFlowerLabel();
-            itemHolder.tPlantName.setText(text);
-            String probability = "Probability: " + result.getProbability().toString() + "%";
-            itemHolder.tProbability.setText(probability);
+            String label = results.get(position);
+            label = StringUtils.capitalize(label);
+            itemHolder.tPlantName.setText(label);
         }
 
         return view;
@@ -55,6 +56,5 @@ public class MlResultItemAdapter extends ArrayAdapter<FlowerResult> {
 
     private static class ItemHolder {
         TextView tPlantName;
-        TextView tProbability;
     }
 }

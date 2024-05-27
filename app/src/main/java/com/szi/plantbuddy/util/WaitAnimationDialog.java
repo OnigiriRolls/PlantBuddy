@@ -14,7 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.szi.plantbuddy.BaseActivity;
 import com.szi.plantbuddy.R;
-import com.szi.plantbuddy.ui.OnDialogDismissListener;
+import com.szi.plantbuddy.ui.IOnDialogDismissListener;
 
 public class WaitAnimationDialog {
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -24,7 +24,7 @@ public class WaitAnimationDialog {
     private AlertDialog dialog;
     private int loopsCounter = 1;
 
-    public void showLoadingDialog(BaseActivity activity, OnDialogDismissListener onDismissListener) {
+    public void showLoadingDialog(BaseActivity activity, IOnDialogDismissListener onDismissListener) {
         loopsCounter = 1;
         LayoutInflater inflater = activity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_loading, null);

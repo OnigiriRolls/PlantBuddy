@@ -40,6 +40,6 @@ public class FlowerLabel {
     @NonNull
     @Override
     public String toString() {
-        return name + " " + label;
+        return name;
     }
 }
