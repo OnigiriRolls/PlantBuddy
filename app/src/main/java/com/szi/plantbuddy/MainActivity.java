@@ -17,12 +17,9 @@ import androidx.core.content.FileProvider;
 
 import com.szi.plantbuddy.exception.FileException;
 import com.szi.plantbuddy.exception.ModelException;
-import com.szi.plantbuddy.mlmodel.ConvNetModel;
-import com.szi.plantbuddy.mlmodel.EfficientNetModel;
 import com.szi.plantbuddy.mlmodel.FlowerLabel;
 import com.szi.plantbuddy.mlmodel.MobileNetModel;
 import com.szi.plantbuddy.mlmodel.ModelManager;
-import com.szi.plantbuddy.mlmodel.RestNetModel;
 import com.szi.plantbuddy.util.FileUtil;
 import com.szi.plantbuddy.util.ImageUtils;
 import com.szi.plantbuddy.util.JsonReader;
@@ -77,9 +74,6 @@ public class MainActivity extends BaseActivity {
             List<FlowerLabel> labels = JsonReader.readLabelsJson(LABELS_JSON_PATH, this);
             ModelManager modelManager = new ModelManager();
             modelManager.addModelRunner(new MobileNetModel());
-            modelManager.addModelRunner(new EfficientNetModel());
-            modelManager.addModelRunner(new RestNetModel());
-            modelManager.addModelRunner(new ConvNetModel());
             results = modelManager.runModels(this, imageBitmap, labels);
             dialog.stopAnimationWhenDone();
             this.results = results;
