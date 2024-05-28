@@ -9,7 +9,6 @@ import com.szi.plantbuddy.exception.ModelException;
 import com.szi.plantbuddy.util.ImageUtils;
 
 import org.tensorflow.lite.gpu.CompatibilityList;
-import org.tensorflow.lite.support.common.Operator;
 import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.model.Model;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
@@ -35,6 +34,7 @@ public abstract class BaseModel<T> implements IModelRunner {
     protected abstract float getMean();
 
     protected abstract float getStddev();
+
     protected abstract boolean getApplyCastOp();
 
     @Override
@@ -48,12 +48,10 @@ public abstract class BaseModel<T> implements IModelRunner {
 
             Supplier<Model.Options> optionsSupplier = () -> {
                 if (compatList.isDelegateSupportedOnThisDevice()) {
-                    Log.d("debug", "This device is GPU Compatible ");
                     return new Model.Options.Builder()
                             .setDevice(Model.Device.GPU)
                             .build();
                 } else {
-                    Log.d("debug", "This device is GPU Incompatible ");
                     return new Model.Options.Builder()
                             .setNumThreads(4)
                             .build();
@@ -64,9 +62,8 @@ public abstract class BaseModel<T> implements IModelRunner {
                 try {
                     return model == null ? createModelInstance(mainActivity.getApplicationContext(), optionsSupplier.get()) : model;
                 } catch (IOException e) {
-                    Log.d("debug", "update and get model ref error ", e);
+                    return null;
                 }
-                return null;
             });
         }
     }

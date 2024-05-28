@@ -1,12 +1,12 @@
 package com.szi.plantbuddy.mlmodel;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.szi.plantbuddy.MainActivity;
 import com.szi.plantbuddy.exception.ModelException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -16,36 +16,49 @@ import java.util.stream.Collectors;
 public class ModelManager {
     private final List<IModelRunner> modelRunners = new ArrayList<>();
     private final int MAX_ELEMENTS = 5;
+    private final int MIN_COUNT = 2;
 
     public void addModelRunner(IModelRunner modelRunner) {
         modelRunners.add(modelRunner);
     }
 
-    public List<FlowerResult> runModels(MainActivity mainActivity, Bitmap imageBitmap, List<FlowerLabel> labels) throws ModelException {
-        List<FlowerResult> combinedResults = new ArrayList<>();
+    public List<String> runModels(MainActivity mainActivity, Bitmap imageBitmap, List<FlowerLabel> labels) throws ModelException {
         Map<String, CountedSum> countedLabels = new HashMap<>();
 
         for (IModelRunner modelRunner : modelRunners) {
             List<FlowerResult> results = modelRunner.runModel(mainActivity, imageBitmap, labels);
-            combinedResults.addAll(results);
             countResults(countedLabels, results);
         }
 
-        List<Map.Entry<String, CountedSum>> countedLabelsOrdered = countedLabels.entrySet().stream()
-                .sorted(Comparator.comparingInt((Map.Entry<String, CountedSum> e) -> e.getValue().getSum()).reversed())
-                .collect(Collectors.toList());
+        List<Map.Entry<String, CountedSum>> countedLabelsOrdered = sortCountedLabels(countedLabels);
+        int n = getNumberOfResultsToDisplay(countedLabelsOrdered);
+        return getLabelsToDisplay(countedLabelsOrdered, n);
+    }
 
+    private List<String> getLabelsToDisplay(List<Map.Entry<String, CountedSum>> countedLabelsOrdered, int n) {
+        Map.Entry<String, CountedSum> bestResult = countedLabelsOrdered.get(0);
+        if (bestResult.getValue().getCount() < MIN_COUNT) {
+            return countedLabelsOrdered.stream()
+                    .limit(n)
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
+        }
+        return Collections.singletonList(bestResult.getKey());
+    }
+
+    private int getNumberOfResultsToDisplay(List<Map.Entry<String, CountedSum>> countedLabelsOrdered) {
         int i = 0, lastSum = 0;
-        while (i < MAX_ELEMENTS || (i < countedLabelsOrdered.size() && lastSum == countedLabelsOrdered.get(i).getValue().getSum())) {
+        while (i < MAX_ELEMENTS || (i < countedLabelsOrdered.size() && lastSum == countedLabelsOrdered.get(i).getValue().getSum() && lastSum > 0)) {
             lastSum = countedLabelsOrdered.get(i).getValue().getSum();
             i++;
         }
 
-        Log.d("debug", combinedResults.toString());
+        return i;
+    }
 
-        return countedLabelsOrdered.stream()
-                .limit(i)
-                .map(e -> new FlowerResult(e.getKey(), (float) e.getValue().getCount()))
+    private List<Map.Entry<String, CountedSum>> sortCountedLabels(Map<String, CountedSum> countedLabels) {
+        return countedLabels.entrySet().stream()
+                .sorted(Comparator.comparingInt((Map.Entry<String, CountedSum> e) -> e.getValue().getSum()).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -64,40 +77,6 @@ public class ModelManager {
                         return oldEntry;
                     });
         });
-    }
-
-    private static class CountedSum {
-        private int sum;
-        private int count;
-
-        public CountedSum(int sum, int count) {
-            this.sum = sum;
-            this.count = count;
-        }
-
-        public int getSum() {
-            return sum;
-        }
-
-        public void setSum(int sum) {
-            this.sum = sum;
-        }
-
-        public int getCount() {
-            return count;
-        }
-
-        public void setCount(int count) {
-            this.count = count;
-        }
-
-        public void incrementCount() {
-            count++;
-        }
-
-        public void addSum(int sum) {
-            this.sum += sum;
-        }
     }
 }
 

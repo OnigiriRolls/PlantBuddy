@@ -2,8 +2,6 @@ package com.szi.plantbuddy.util;
 
 import static com.szi.plantbuddy.exception.FileException.DIRECTORY_EXCEPTION_MESSAGE;
 
-import android.util.Log;
-
 import com.szi.plantbuddy.BaseActivity;
 import com.szi.plantbuddy.exception.FileException;
 
@@ -35,7 +33,6 @@ public class FileUtil {
             );
 
             currentPhotoPath = "file:" + image.getAbsolutePath();
-            Log.d("debug", currentPhotoPath);
             return image;
         }
 
@@ -50,8 +47,7 @@ public class FileUtil {
 
             if (files != null) {
                 for (File file : files) {
-                    if (!file.delete())
-                        Log.d("debug", file.getName() + "was not deleted");
+                    file.delete();
                 }
             }
         }

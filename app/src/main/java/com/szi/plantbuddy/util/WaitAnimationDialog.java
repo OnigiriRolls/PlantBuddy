@@ -5,7 +5,6 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -40,11 +39,9 @@ public class WaitAnimationDialog {
             @Override
             public void onAnimationEnd(Drawable drawable) {
                 if (shouldContinueAnimation || loopsCounter < MINIM_LOOPS) {
-                    Log.d("debug", loopsCounter + " " + shouldContinueAnimation);
                     loopsCounter++;
                     handler.postDelayed(() -> anim.start(), 500);
                 } else {
-                    Log.d("debug", "dismiss");
                     handler.removeCallbacksAndMessages(null);
                     anim.clearAnimationCallbacks();
                     if (onDismissListener != null) {
@@ -60,7 +57,6 @@ public class WaitAnimationDialog {
     }
 
     public void stopAnimationWhenDone() {
-        Log.d("debug", "in hide");
         if (dialog != null && dialog.isShowing()) {
             shouldContinueAnimation = false;
         }

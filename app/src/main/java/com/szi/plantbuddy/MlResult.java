@@ -12,12 +12,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.szi.plantbuddy.mlmodel.FlowerResult;
 import com.szi.plantbuddy.ui.MlResultItemAdapter;
 import com.szi.plantbuddy.util.ImageUtils;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.WordUtils;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,24 +50,27 @@ public class MlResult extends AppCompatActivity {
     }
 
     private void setResults() {
-        List<FlowerResult> results = (List<FlowerResult>) getIntent().getSerializableExtra("results");
+        List<String> results = getIntent().getStringArrayListExtra("results");
         TextView bestResultText = findViewById(R.id.tBestResult);
+        TextView introText = findViewById(R.id.tTitle);
         TextView otherGuesses = findViewById(R.id.tGuesses);
         ListView resultListView = findViewById(R.id.lResults);
 
         if (results != null && results.size() > 0) {
-            FlowerResult bestResult = results.get(0);
-            String label = StringUtils.capitalize(bestResult.getFlowerLabel());
+            String bestResult = results.get(0);
+            String label = WordUtils.capitalizeFully(bestResult);
             bestResultText.setText(label);
 
-            if (bestResult.getProbability() < 2) {
-                List<String> goodResults = results.stream().skip(1).map(FlowerResult::getFlowerLabel).collect(Collectors.toList());
+            if (results.size() > 1) {
+                List<String> goodResults = results.stream().skip(1).collect(Collectors.toList());
                 final MlResultItemAdapter adapter = new MlResultItemAdapter(this, R.layout.plant_item_title, goodResults);
                 resultListView.setAdapter(adapter);
+                introText.setText(R.string.this_flower_is_maybe);
                 otherGuesses.setVisibility(View.VISIBLE);
                 resultListView.setVisibility(View.VISIBLE);
                 flowerImage.setVisibility(View.GONE);
             } else {
+                introText.setText(R.string.this_flower_is);
                 otherGuesses.setVisibility(View.GONE);
                 resultListView.setVisibility(View.GONE);
                 flowerImage.setVisibility(View.VISIBLE);

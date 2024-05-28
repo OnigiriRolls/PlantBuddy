@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.szi.plantbuddy.R;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.WordUtils;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class MlResultItemAdapter extends ArrayAdapter<String> {
         }
         if (results != null && results.size() >= position) {
             String label = results.get(position);
-            label = StringUtils.capitalize(label);
+            label = WordUtils.capitalizeFully(label);
             itemHolder.tPlantName.setText(label);
         }
 

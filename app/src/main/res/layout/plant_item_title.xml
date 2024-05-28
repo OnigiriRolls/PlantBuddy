@@ -4,7 +4,7 @@
     android:layout_height="70dp"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_medium_padding">
+    android:padding="@dimen/activity_medium_padding">
 
     <TextView
         android:id="@+id/tPlantName"

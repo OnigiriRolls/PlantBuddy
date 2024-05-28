@@ -24,5 +24,6 @@
     <string name="hello_human_n_n_i_am_lily_your_plant_buddy">Hello Human! \n\n I am Lily, your plant buddy</string>
     <string name="take_a_photo_help_identify_">Take a photo of a flower \n \n I\'ll help you identify it</string>
     <string name="this_flower_is">I\'m pretty sure this flower is</string>
+    <string name="this_flower_is_maybe">I think this flower is</string>
     <string name="distinct_accent">But it has a distinct accent \n My other guesses are…</string>
 </resources>

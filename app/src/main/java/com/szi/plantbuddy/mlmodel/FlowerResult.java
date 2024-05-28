@@ -1,35 +1,16 @@
 package com.szi.plantbuddy.mlmodel;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
 
 import java.util.Objects;
 
-public class FlowerResult implements Parcelable {
-    public static final Creator<FlowerResult> CREATOR = new Creator<FlowerResult>() {
-        @Override
-        public FlowerResult createFromParcel(Parcel in) {
-            return new FlowerResult(in);
-        }
-
-        @Override
-        public FlowerResult[] newArray(int size) {
-            return new FlowerResult[size];
-        }
-    };
+public class FlowerResult {
     private String flowerLabel;
     private Float probability;
 
     public FlowerResult(String flowerLabel, Float probability) {
         this.flowerLabel = flowerLabel;
         this.probability = probability;
-    }
-
-    protected FlowerResult(Parcel in) {
-        probability = in.readFloat();
-        flowerLabel = in.readString();
     }
 
     public String getFlowerLabel() {
@@ -59,17 +40,6 @@ public class FlowerResult implements Parcelable {
     @Override
     public int hashCode() {
         return Objects.hash(flowerLabel, probability);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeFloat(probability);
-        dest.writeString(flowerLabel);
     }
 
     @NonNull
