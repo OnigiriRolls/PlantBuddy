@@ -2,7 +2,6 @@ package com.szi.plantbuddy.mlmodel;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.szi.plantbuddy.MainActivity;
 import com.szi.plantbuddy.exception.ModelException;
@@ -14,8 +13,6 @@ import org.tensorflow.lite.support.model.Model;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -78,14 +75,7 @@ public abstract class BaseModel<T> implements IModelRunner {
             throw new ModelException("Model was not initialised successfully!");
         }
 
-        Log.d("debug", "START inference");
-        Instant start = Instant.now();
         TensorBuffer output = runInference(model, image);
-        Instant finish = Instant.now();
-        long timeElapsed = Duration.between(start, finish).toMillis();
-        Log.d("debug", "Time elapsed: " + timeElapsed);
-        Log.d("debug", "FINISH inference");
-
         return processOutput(output, labels);
     }
 
