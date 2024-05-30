@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.szi.plantbuddy.exception.FileException;
@@ -23,10 +24,10 @@ import com.szi.plantbuddy.mlmodel.FlowerLabel;
 import com.szi.plantbuddy.mlmodel.MobileNetModel;
 import com.szi.plantbuddy.mlmodel.ModelManager;
 import com.szi.plantbuddy.mlmodel.RestNetModel;
+import com.szi.plantbuddy.ui.WaitAnimationDialog;
 import com.szi.plantbuddy.util.FileUtil;
 import com.szi.plantbuddy.util.ImageUtils;
 import com.szi.plantbuddy.util.JsonReader;
-import com.szi.plantbuddy.util.WaitAnimationDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,10 +36,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends AppCompatActivity {
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private static final FileUtil FILE_UTILS = new FileUtil();
     private static final String LABELS_JSON_PATH = "oxford_labels.json";
+    private ModelManager modelManager;
     private ActivityResultLauncher<Intent> cameraActivityResultLauncher;
     private WaitAnimationDialog dialog;
     private List<String> results;
@@ -51,6 +53,11 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         dialog = new WaitAnimationDialog();
         executorService = Executors.newSingleThreadExecutor();
+        modelManager = new ModelManager();
+        modelManager.addModelRunner(new MobileNetModel());
+        modelManager.addModelRunner(new EfficientNetModel());
+        modelManager.addModelRunner(new RestNetModel());
+        modelManager.addModelRunner(new ConvNetModel());
 
         cameraActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -75,11 +82,6 @@ public class MainActivity extends BaseActivity {
         List<String> results = null;
         try {
             List<FlowerLabel> labels = JsonReader.readLabelsJson(LABELS_JSON_PATH, this);
-            ModelManager modelManager = new ModelManager();
-            modelManager.addModelRunner(new MobileNetModel());
-            modelManager.addModelRunner(new EfficientNetModel());
-            modelManager.addModelRunner(new RestNetModel());
-            modelManager.addModelRunner(new ConvNetModel());
             results = modelManager.runModels(this, imageBitmap, labels);
             dialog.stopAnimationWhenDone();
             this.results = results;
@@ -99,7 +101,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void startActivityWithResults(List<String> results, String imagePath) {
-        Intent intent = new Intent(this, MlResult.class);
+        Intent intent = new Intent(this, MlResultActivity.class);
         intent.putStringArrayListExtra("results", new ArrayList<>(results));
         intent.putExtra("imagePath", imagePath);
 

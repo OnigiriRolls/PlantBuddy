@@ -2,7 +2,8 @@ package com.szi.plantbuddy.util;
 
 import static com.szi.plantbuddy.exception.FileException.DIRECTORY_EXCEPTION_MESSAGE;
 
-import com.szi.plantbuddy.BaseActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.szi.plantbuddy.exception.FileException;
 
 import java.io.File;
@@ -19,7 +20,7 @@ public class FileUtil {
         return currentPhotoPath;
     }
 
-    public File createImageFile(BaseActivity activity) throws IOException, FileException {
+    public File createImageFile(AppCompatActivity activity) throws IOException, FileException {
         String timeStamp = new SimpleDateFormat(FILENAME_FORMAT, Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
 
@@ -39,7 +40,7 @@ public class FileUtil {
         throw new FileException(DIRECTORY_EXCEPTION_MESSAGE);
     }
 
-    public void deleteImagesFromInternalStorage(BaseActivity activity) {
+    public void deleteImagesFromInternalStorage(AppCompatActivity activity) {
         File storageDir = new File(activity.getFilesDir(), "pictures");
 
         if (storageDir.exists() && storageDir.isDirectory()) {

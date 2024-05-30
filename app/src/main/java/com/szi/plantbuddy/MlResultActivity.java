@@ -17,12 +17,11 @@ import com.szi.plantbuddy.util.ImageUtils;
 
 import org.apache.commons.text.WordUtils;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MlResult extends AppCompatActivity {
+public class MlResultActivity extends AppCompatActivity {
     private ImageView flowerImage;
 
     @Override

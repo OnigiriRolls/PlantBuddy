@@ -20,7 +20,7 @@ public class JsonReader {
     public static List<FlowerLabel> readLabelsJson(String path, Activity activity) throws FileException {
         try {
             AssetManager assetManager = activity.getAssets();
-            InputStream inputStream = assetManager.open("oxford_labels.json");
+            InputStream inputStream = assetManager.open(path);
             Reader reader = new InputStreamReader(inputStream);
             Gson gson = new Gson();
             FlowerLabel[] flowerArray = gson.fromJson(reader, FlowerLabel[].class);
