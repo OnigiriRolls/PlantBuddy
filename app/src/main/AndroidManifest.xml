@@ -16,7 +16,7 @@
         android:theme="@style/Theme.PlantBuddy"
         tools:targetApi="31">
         <activity
-            android:name=".MlResult"
+            android:name=".MlResultActivity"
             android:exported="false" />
 
         <provider

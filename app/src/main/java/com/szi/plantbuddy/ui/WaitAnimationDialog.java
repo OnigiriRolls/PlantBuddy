@@ -1,4 +1,4 @@
-package com.szi.plantbuddy.util;
+package com.szi.plantbuddy.ui;
 
 import android.graphics.drawable.Animatable2;
 import android.graphics.drawable.AnimatedVectorDrawable;
@@ -10,10 +10,9 @@ import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
-import com.szi.plantbuddy.BaseActivity;
 import com.szi.plantbuddy.R;
-import com.szi.plantbuddy.ui.IOnDialogDismissListener;
 
 public class WaitAnimationDialog {
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -23,7 +22,7 @@ public class WaitAnimationDialog {
     private AlertDialog dialog;
     private int loopsCounter = 1;
 
-    public void showLoadingDialog(BaseActivity activity, IOnDialogDismissListener onDismissListener) {
+    public void showLoadingDialog(AppCompatActivity activity, Runnable onDismiss) {
         loopsCounter = 1;
         LayoutInflater inflater = activity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_loading, null);
@@ -44,8 +43,8 @@ public class WaitAnimationDialog {
                 } else {
                     handler.removeCallbacksAndMessages(null);
                     anim.clearAnimationCallbacks();
-                    if (onDismissListener != null) {
-                        onDismissListener.onDismiss();
+                    if (onDismiss != null) {
+                        onDismiss.run();
                     }
                 }
             }
