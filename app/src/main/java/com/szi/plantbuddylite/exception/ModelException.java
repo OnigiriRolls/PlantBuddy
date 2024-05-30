@@ -1,4 +1,4 @@
-package com.szi.plantbuddy.exception;
+package com.szi.plantbuddylite.exception;
 
 public class ModelException extends Exception {
     public ModelException(String message) {

@@ -1,4 +1,4 @@
-package com.szi.plantbuddy;
+package com.szi.plantbuddylite;
 
 import android.content.Context;
 

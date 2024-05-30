@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.szi.plantbuddy'
+    namespace 'com.szi.plantbuddylite'
     compileSdk 34
 
     defaultConfig {

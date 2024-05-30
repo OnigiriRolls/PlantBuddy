@@ -1,4 +1,4 @@
-package com.szi.plantbuddy;
+package com.szi.plantbuddylite;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,8 +12,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.szi.plantbuddy.ui.MlResultItemAdapter;
-import com.szi.plantbuddy.util.ImageUtils;
+import com.szi.plantbuddylite.ui.MlResultItemAdapter;
+import com.szi.plantbuddylite.util.ImageUtils;
 
 import org.apache.commons.text.WordUtils;
 

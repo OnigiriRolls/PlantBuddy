@@ -1,11 +1,11 @@
-package com.szi.plantbuddy.mlmodel;
+package com.szi.plantbuddylite.mlmodel;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.szi.plantbuddy.MainActivity;
-import com.szi.plantbuddy.exception.ModelException;
-import com.szi.plantbuddy.util.ImageUtils;
+import com.szi.plantbuddylite.MainActivity;
+import com.szi.plantbuddylite.exception.ModelException;
+import com.szi.plantbuddylite.util.ImageUtils;
 
 import org.tensorflow.lite.gpu.CompatibilityList;
 import org.tensorflow.lite.support.image.TensorImage;

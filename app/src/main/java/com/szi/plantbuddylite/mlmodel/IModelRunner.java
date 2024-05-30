@@ -1,9 +1,9 @@
-package com.szi.plantbuddy.mlmodel;
+package com.szi.plantbuddylite.mlmodel;
 
 import android.graphics.Bitmap;
 
-import com.szi.plantbuddy.MainActivity;
-import com.szi.plantbuddy.exception.ModelException;
+import com.szi.plantbuddylite.MainActivity;
+import com.szi.plantbuddylite.exception.ModelException;
 
 import java.util.List;
 

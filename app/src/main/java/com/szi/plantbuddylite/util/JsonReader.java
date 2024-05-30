@@ -1,13 +1,13 @@
-package com.szi.plantbuddy.util;
+package com.szi.plantbuddylite.util;
 
-import static com.szi.plantbuddy.exception.FileException.JSON_EXCEPTION_MESSAGE;
+import static com.szi.plantbuddylite.exception.FileException.JSON_EXCEPTION_MESSAGE;
 
 import android.app.Activity;
 import android.content.res.AssetManager;
 
 import com.google.gson.Gson;
-import com.szi.plantbuddy.exception.FileException;
-import com.szi.plantbuddy.mlmodel.FlowerLabel;
+import com.szi.plantbuddylite.exception.FileException;
+import com.szi.plantbuddylite.mlmodel.FlowerLabel;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

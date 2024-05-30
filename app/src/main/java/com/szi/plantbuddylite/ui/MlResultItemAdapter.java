@@ -1,4 +1,4 @@
-package com.szi.plantbuddy.ui;
+package com.szi.plantbuddylite.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.szi.plantbuddy.R;
+import com.szi.plantbuddylite.R;
 
 import org.apache.commons.text.WordUtils;
 

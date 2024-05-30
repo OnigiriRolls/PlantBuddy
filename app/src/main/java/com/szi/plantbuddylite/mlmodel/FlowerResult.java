@@ -1,4 +1,4 @@
-package com.szi.plantbuddy.mlmodel;
+package com.szi.plantbuddylite.mlmodel;
 
 import androidx.annotation.NonNull;
 

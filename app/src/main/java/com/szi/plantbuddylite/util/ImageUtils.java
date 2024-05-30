@@ -1,4 +1,4 @@
-package com.szi.plantbuddy.util;
+package com.szi.plantbuddylite.util;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;

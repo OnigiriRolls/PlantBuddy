@@ -1,10 +1,10 @@
-package com.szi.plantbuddy.util;
+package com.szi.plantbuddylite.util;
 
-import static com.szi.plantbuddy.exception.FileException.DIRECTORY_EXCEPTION_MESSAGE;
+import static com.szi.plantbuddylite.exception.FileException.DIRECTORY_EXCEPTION_MESSAGE;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.szi.plantbuddy.exception.FileException;
+import com.szi.plantbuddylite.exception.FileException;
 
 import java.io.File;
 import java.io.IOException;

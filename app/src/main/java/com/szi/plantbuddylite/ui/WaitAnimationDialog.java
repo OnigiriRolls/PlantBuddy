@@ -1,4 +1,4 @@
-package com.szi.plantbuddy.ui;
+package com.szi.plantbuddylite.ui;
 
 import android.graphics.drawable.Animatable2;
 import android.graphics.drawable.AnimatedVectorDrawable;
@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.szi.plantbuddy.R;
+import com.szi.plantbuddylite.R;
 
 public class WaitAnimationDialog {
     private final Handler handler = new Handler(Looper.getMainLooper());

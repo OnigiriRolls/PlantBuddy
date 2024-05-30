@@ -1,4 +1,4 @@
-package com.szi.plantbuddy;
+package com.szi.plantbuddylite;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,15 +16,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
-import com.szi.plantbuddy.exception.FileException;
-import com.szi.plantbuddy.exception.ModelException;
-import com.szi.plantbuddy.mlmodel.FlowerLabel;
-import com.szi.plantbuddy.mlmodel.MobileNetModel;
-import com.szi.plantbuddy.mlmodel.ModelManager;
-import com.szi.plantbuddy.util.FileUtil;
-import com.szi.plantbuddy.util.ImageUtils;
-import com.szi.plantbuddy.util.JsonReader;
-import com.szi.plantbuddy.ui.WaitAnimationDialog;
+import com.szi.plantbuddylite.exception.FileException;
+import com.szi.plantbuddylite.exception.ModelException;
+import com.szi.plantbuddylite.mlmodel.FlowerLabel;
+import com.szi.plantbuddylite.mlmodel.MobileNetModel;
+import com.szi.plantbuddylite.mlmodel.ModelManager;
+import com.szi.plantbuddylite.util.FileUtil;
+import com.szi.plantbuddylite.util.ImageUtils;
+import com.szi.plantbuddylite.util.JsonReader;
+import com.szi.plantbuddylite.ui.WaitAnimationDialog;
 
 import java.io.File;
 import java.io.IOException;
