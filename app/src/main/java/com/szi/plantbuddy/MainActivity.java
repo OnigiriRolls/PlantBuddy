@@ -1,11 +1,13 @@
 package com.szi.plantbuddy;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Toast;
@@ -31,6 +33,7 @@ import com.szi.plantbuddy.util.JsonReader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                             Bitmap rotatedImage = ImageUtils.rotateBitmap(imageBitmap, 90);
                             dialog.showLoadingDialog(this, this::onDialogDismissed);
                             executorService.execute(() -> runModelAndShowResults(rotatedImage));
+                            saveImageToGallery(rotatedImage);
                         } catch (IOException e) {
                             Toast.makeText(this, R.string.message_error, Toast.LENGTH_LONG).show();
                         }
@@ -143,6 +147,32 @@ public class MainActivity extends AppCompatActivity {
             Uri photoURI = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", photoFile);
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
             cameraActivityResultLauncher.launch(cameraIntent);
+        }
+    }
+
+    private void saveImageToGallery(Bitmap bitmap) {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, "Plant_" + System.currentTimeMillis() + ".jpg");
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+
+        Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+        if (uri == null) {
+            Toast.makeText(this, "Failed to save image.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            OutputStream outputStream = getContentResolver().openOutputStream(uri);
+            if (outputStream == null) {
+                Toast.makeText(this, "Failed to save image.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            outputStream.close();
+            Toast.makeText(this, "Image saved to gallery.", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            Toast.makeText(this, "Failed to save image.", Toast.LENGTH_SHORT).show();
         }
     }
 
