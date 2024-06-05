@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class ModelManager {
     private final List<IModelRunner> modelRunners = new ArrayList<>();
     private final int MAX_ELEMENTS = 5;
-    private final int MIN_COUNT = 2;
+    private final int MIN_COUNT = 1;
 
     public void addModelRunner(IModelRunner modelRunner) {
         modelRunners.add(modelRunner);
@@ -37,6 +37,7 @@ public class ModelManager {
 
     private List<String> getLabelsToDisplay(List<Map.Entry<String, CountedSum>> countedLabelsOrdered, int n) {
         Map.Entry<String, CountedSum> bestResult = countedLabelsOrdered.get(0);
+
         if (bestResult.getValue().getCount() < MIN_COUNT) {
             return countedLabelsOrdered.stream()
                     .limit(n)
