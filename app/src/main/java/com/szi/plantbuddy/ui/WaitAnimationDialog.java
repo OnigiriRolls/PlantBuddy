@@ -16,7 +16,7 @@ import com.szi.plantbuddy.R;
 
 public class WaitAnimationDialog {
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private final int MINIM_LOOPS = 2;
+    private final int MINIM_LOOPS = 1;
     private AnimatedVectorDrawable anim;
     private boolean shouldContinueAnimation = true;
     private AlertDialog dialog;
