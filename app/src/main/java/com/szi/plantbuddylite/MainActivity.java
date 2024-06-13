@@ -164,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
             }
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
             outputStream.close();
-            Toast.makeText(this, "Image saved to gallery.", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             Toast.makeText(this, "Failed to save image.", Toast.LENGTH_SHORT).show();
         }
