@@ -31,6 +31,6 @@ public class ConvNetModel extends BaseModel<com.szi.plantbuddy.ml.Model129conv17
 
     @Override
     protected boolean getApplyCastOp() {
-        return false;
+        return true;
     }
 }
